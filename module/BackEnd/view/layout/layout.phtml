@@ -1,0 +1,35 @@
+<?php echo $this->doctype(); ?>
+<html>
+<head>
+    <meta charset="utf-8">
+    <?php echo $this->headTitle("web application"); ?>
+    <?php echo $this->headMeta()
+        ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+        ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+    ?>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="">
+    <!-- Scripts -->
+    <script type="application/javascript" src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+    <script type="application/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script type="application/javascript" src=""></script>
+    <script type="application/javascript" src=""></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>BACK END</h1>
+    </header>
+    <hr>
+    <div class="content"><?php echo $this->content; ?></div>
+    <hr>
+    <footer>
+        <p>&copy;date - <?php echo date('D, d M Y H:i:s') ?></p>
+    </footer>
+</div>
+
+<?php echo $this->inlineScript() ?>
+</body>
+</html>
