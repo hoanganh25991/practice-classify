@@ -147,7 +147,7 @@ return array(
             'Session' => 'BackEnd\Factory\SessionManagerFactory',
             'UniCache' => 'BackEnd\Factory\UniCacheFactory',
             'UserTableQuery' => function($sm){
-                return new \BackEnd\DbQuery\UserTableQuery($sm);
+                return new \BackEnd\Database\UserTable($sm);
             },
             'UniAcl' => 'BackEnd\Factory\UniAclFactory',
 

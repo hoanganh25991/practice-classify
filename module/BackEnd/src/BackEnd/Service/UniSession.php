@@ -10,6 +10,7 @@ use Zend\Session\Storage\SessionArrayStorage;
  *
  */
 class UniSession{
+    const LOGGED_IN_USER = "LOGGED_IN_USER";
     protected $manager;
 
     public function __construct(){
@@ -26,6 +27,14 @@ class UniSession{
 
     public function get($className, $event){
         $container = new Container($className, $this->manager);
-        return $container->offsetGet($event);
+        if($container->offsetExists($event)){
+            return $container->offsetGet($event);
+        }
+        return false;
+    }
+
+    public function remove($className, $event){
+        $container = new Container($className, $this->manager);
+        $container->offsetGet($event);
     }
 }

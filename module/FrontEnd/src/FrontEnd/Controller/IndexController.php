@@ -17,7 +17,7 @@ class IndexController extends AbstractActionController{
     public function indexAction(){
         $variablesContainer = array();
         $variablesContainer["controller"] = 'FrontEnd\Controller\IndexController\indexAction';
-        $sessionContainer = new Container("abc", $this->serviceManager->get("Session"));
+//        $sessionContainer = new Container("abc", $this->serviceManager->get("Session"));
 //        if($sessionContainer->offsetExists("user")){
 //            $variablesContainer['@info'] = "get user from \$sessionContainer";
 //            $variablesContainer['user'] = $sessionContainer->offsetGet("user");

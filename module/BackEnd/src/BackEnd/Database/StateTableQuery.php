@@ -1,5 +1,5 @@
 <?php
-namespace BackEnd\DbQuery;
+namespace BackEnd\Database;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
