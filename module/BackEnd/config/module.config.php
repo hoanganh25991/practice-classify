@@ -65,7 +65,7 @@ return array(
             'user-view' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/admin/user',
+                    'route' => '/admin/role',
                     'defaults' => array(
                         'controller' => 'BackEnd\Controller\User',
                         'action' => 'view',

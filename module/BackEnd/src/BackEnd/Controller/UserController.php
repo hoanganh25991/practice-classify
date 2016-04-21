@@ -15,44 +15,11 @@ class UserController extends AbstractActionController{
     }
 
     public function viewAction(){
-        /**
-         * who i am ^^
+        /*
+         * read from "storage"
+         * hien thi ra view
          */
-        $variables = array();
-        $variables["controller"] = 'BackEnd\Controller\UserController\viewAction';
 
-        /**
-         * handle logic
-         */
-        /**
-         * loop role + resource + privilege
-         * loop role + special
-         */
-        /**
-         * base on role, where user can access
-         */
-        $uniAclConfigModel = new UniAclConfigModel($this->serviceManager);
-        //        $guestResourcePrivilege = $uniAclConfigModel->getResourcePrivilegeOnRole("guest");
-        //        $editorResourcePrivilege = $uniAclConfigModel->getResourcePrivilegeOnRole("editor");
-        //        $adminResourcePrivilege = $uniAclConfigModel->getResourcePrivilegeOnRole("admin");
-        //        $variables["guest"] = $guestResourcePrivilege;
-        //        $variables["editor"] = $editorResourcePrivilege;
-        //        $variables["admin"] = $adminResourcePrivilege;
-        $userResourcePrivilege = $uniAclConfigModel->getControllerActionOnUser();
-        $variables["userResourcePrivilege"] = $userResourcePrivilege;
-        /**
-         * /admin/user >>> map user---resource
-         * handle view/edit/add/delete on resource
-         * resource loop from where $user allow
-         */
-        $thisController = 'BackEnd\Controller\User';
-        $actionOnController = $uniAclConfigModel->getActionOnController($thisController);
-        $variables["actionOnController"] = $actionOnController;
-        /**
-         * inject $view into layout
-         */
-        $view = new ViewModel($variables);
-        return $view;
     }
 
     public function addAction(){
