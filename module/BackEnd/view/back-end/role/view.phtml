@@ -3,101 +3,95 @@
 <input type="hidden" name="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
 <div class="row">
     <div class="col-md-8">
-        <div>
-            <span class="h3">Role</span>
-            <span class="btn btn-success pull-right" id="btnAddRole">add</span>
-        </div>
+        <div class="col-md-10 col-md-offset-1">
 
-        <hr>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>role</th>
-                <th>inherit</th>
-            </tr>
-            </thead>
-            <tbody id="mapRoleControllerAction">
-            <tr>
-                <td>
-                    <select class="selectpicker">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option selected>Relish</option>
-                    </select>
-                <td>
-                    <select class="selectpicker">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option selected>Relish</option>
-                    </select>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <span class="btn btn-sm btn-default" id="btnMoreRole">more role</span>
-        <h3>Map Role Controller-Action</h3>
-        <hr>
-        <div>
-            <select class="selectpicker">
-                <option>Mustard</option>
-                <option>Ketchup</option>
-                <option selected>Relish</option>
-            </select>
-            <button class="btn btn-default">choose contrx</button>
-            <div>
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <span class="panel-title" data-toggle="collapse" href="#collapseOne" class="collapsed">FrontEnd\Controller\Index</span>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
-                        <div class="panel-body">
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 1</label>
-                            </div>
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 2</label>
-                            </div>
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 3</label>
-                            </div>
+            <div class="panel panel-default panel-table">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col col-xs-6">
+                            <h3 class="panel-title">Role</h3>
+                        </div>
+                        <div class="col col-xs-6 text-right">
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#formAddRole"><span
+                                    class="glyphicon glyphicon-plus"</span></button>
                         </div>
                     </div>
                 </div>
+                <div class="panel-body">
+                    <table class="table table-striped table-bordered table-list">
+                        <thead>
+                        <tr>
+                            <th>role</th>
+                            <th>inherit</th>
+                            <th><em class="fa fa-cog"></em></th>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="headingOne">
-                        <span class="panel-title" data-toggle="collapse" href="#collapseSecond" class="collapsed">BackEnd\Controller\Role</span>
-                    </div>
-                    <div id="collapseSecond" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                        </tr>
+                        </thead>
+                        <tbody id="roleList">
+                        <tr>
+                            <td>admin</td>
+                            <td>editor</td>
+                            <td align="center">
+                                <a class="btn btn-default"><em class="fa fa-pencil"></em></a>
+                                <a class="btn btn-danger"><em class="fa fa-trash"></em></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="panel-footer">
+                </div>
+            </div>
+            <div class="modal fade" id="formAddRole">
+                <div class="col-md-4 col-md-offset-4">
+                    <div class="panel panel-default panel-table">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col col-xs-6">
+                                    <h3 class="panel-title">Role</h3>
+                                </div>
+                            </div>
+                        </div>
                         <div class="panel-body">
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 1</label>
+                            <table class="table table-striped table-bordered table-list">
+                                <thead>
+                                <tr>
+                                    <th>role</th>
+                                    <th>inherit</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td><input type="text" class="form-control" name="role" placeholder="role"></td>
+                                    <td><input type="text" class="form-control" name="inherit" placeholder="inherit">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <div class="panel-footer">
+                            <div class="row">
+                                <div class="col-md-4 col-md-offset-8">
+                                    <button class="btn btn-primary pull-right" id="btnAddRole">add</button>
+                                </div>
                             </div>
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 2</label>
-                            </div>
-                            <div class="checkbox action">
-                                <label><input type="checkbox" value="">Option 3</label>
-                            </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-        <button class="btn btn-sm btn-default" id="btnMoreRoleControllerAction">more role controller-action</button>
     </div><!--   end of column-->
-    <h3>Map Role Special</h3>
-    <hr>
-    <div>
-        <select class="selectpicker">
-            <option>Mustard</option>
-            <option>Ketchup</option>
-            <option selected>Relish</option>
-        </select>
-    </div>
 </div>
-
+<div>
+    <input type="checkbox" name="FrontEnd\Controller\Index[]" value="view">
+    <input type="checkbox" name="FrontEnd[]" value="edit">
+    <input type="checkbox" name="FrontEnd[]" value="add">
+    <input type="checkbox" name="FrontEnd[]" value="delete">
+</div>
 <script>
     (function($){
         $(document).ready(function(){
@@ -108,25 +102,41 @@
             const MAP_ROLE_CONTROLLER = "MAP_ROLE_CONTROLLER";
             const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
             const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
-            var uniAclConfig = $("input[name = 'uniAclConfig']").val();
-            var userActionOnRole = $("input[name = 'userActionOnRole']").val();
-            console.log(userActionOnRole);
-            var roleTableBody = $("#roleTableBody");
+            var uniAclConfig = JSON.parse($("input[name = 'uniAclConfig']").val());
+            var userActionOnRole = JSON.parse($("input[name = 'userActionOnRole']").val());
             console.log(uniAclConfig);
-            /**
-             * ROLE => array(
-             "guest" => null,
-             "staff" => "guest",
-             "editor" => "staff",
-             "admin" => "editor"
-             ),
-             */
-//            var roleTableData = uniAclConfig[ROLE];console.log(roleTableData);
-//            //if has role table
-//            if(roleTableData){
+            console.log(userActionOnRole);
 
-//            }
-            //if no role table
+            var btnAddRole = $("#btnAddRole");
+            var roleList = $("#roleList");
+            var formAddRole = $("#formAddRole");
+            btnAddRole.on("click", function(){
+                var role = $("input[name='role']").val();
+                var inherit = $("input[name='inherit']").val();
+                var tr = $("<tr>");
+                var td1 = $("<td>");
+                var td2 = $("<td>");
+                td1.html(role);
+                td2.html(inherit);
+                var td3 = $('<td align="center"> <a class="btn btn-default"><em class="fa fa-pencil"></em></a> <a class="btn btn-danger"><em class="fa fa-trash"></em></a> </td>');
+                tr.append(td1);
+                tr.append(td2);
+                tr.append(td3);
+                tr.appendTo(roleList);
+                formAddRole.modal("hide");
+            });
+            roleList.on("click", "tr", function(){
+//               window.alert(this);
+                console.log(this);
+//                var tr = $(this).parent("tr");
+//                console.log(tr);
+//                var td1 = tr[0];
+//                var td2 = tr[1];
+//                console.log(td1, td2);
+                var tds = $(this).find("td");
+                var td1 = tds[0]; console.log(td1);
+                var td2 = tds[1]; console.log(td2);
+            });
 
         });
     })(jQuery);

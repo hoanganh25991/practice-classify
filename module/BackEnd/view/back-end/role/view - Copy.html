@@ -1,0 +1,46 @@
+﻿<h3><?php var_dump($this->_vars); ?></h3>
+<input type="hidden" name="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
+<input type="hidden" name="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
+<div class="row">
+    <div class="col-md-8">
+        <span class="h3">ROLE</span>
+        <input type="text" name="role" placeholder="role">
+        <input type="text" name="inherit" placeholder="inherit">
+    </div>
+    </div><!--   end of column-->
+</div>
+
+<script>
+    (function($){
+        $(document).ready(function(){
+            const ROLE = "ROLE";
+            const CONTROLLER_ACTION = "CONTROLLER_ACTION";
+            const ACTION = "ACTION";
+            const SPECIAL = "SPECIAL";
+            const MAP_ROLE_CONTROLLER = "MAP_ROLE_CONTROLLER";
+            const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
+            const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
+            var uniAclConfig = $("input[name = 'uniAclConfig']").val();
+            var userActionOnRole = $("input[name = 'userActionOnRole']").val();
+            console.log(userActionOnRole);
+            var roleTableBody = $("#roleTableBody");
+            console.log(uniAclConfig);
+            /**
+             * ROLE => array(
+             "guest" => null,
+             "staff" => "guest",
+             "editor" => "staff",
+             "admin" => "editor"
+             ),
+             */
+//            var roleTableData = uniAclConfig[ROLE];console.log(roleTableData);
+//            //if has role table
+//            if(roleTableData){
+
+//            }
+            //if no role table
+
+        });
+    })(jQuery);
+</script>
+
