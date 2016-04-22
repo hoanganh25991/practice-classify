@@ -6,6 +6,7 @@ use BackEnd\Controller\AuthController;
 use BackEnd\Service\UniAcl;
 use BackEnd\Service\UniCache;
 use BackEnd\Service\UniSession;
+use Zend\Mvc\Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
@@ -36,33 +37,75 @@ class Module{
         $moduleRouteListener->attach($eventManager);
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, array(
             $this,
-            'checkAuthAcl'
-        ), 1);
+            'checkAcl'
+        ), 100);
 
     }
 
-    public function checkAuthAcl(MvcEvent $mvcEvent){
-        /*
-         * read access controll config from  cache
+    public function checkAcl(MvcEvent $mvcEvent){
+        $serviceManager = $mvcEvent->getApplication()->getServiceManager();
+        /**
+         * GET ACL CONFIG
          */
         /** @var UniCache $cache */
-        $cache = $mvcEvent->getApplication()->getServiceManager()->get("UniCache");
+        $cache = $serviceManager->get("UniCache");
 
-        /** @var array|false $aclConfig */
+        /** @var array $aclConfig */
         $aclConfig = $cache->getArrayItem(UniAcl::CONFIG);
-        if(!$aclConfig){
+        if(!(count($aclConfig) > 0)){
             $aclConfig = array();
 
-            $config = $mvcEvent->getApplication()->getServiceManager()->get("config");
-            $invokablesController = $config['controllers']['invokables'];
-            $factoriesController = $config['controllers']['factories'];
-            /** @var array $aclResources */
-            $controllerArray = array_merge(array_keys($invokablesController), array_keys($factoriesController));
+            /** @var Application $app */
+            $config = $serviceManager->get("config");
+//            $invokablesController = $config['controllers']['invokables'];
+//            $factoriesController = $config['controllers']['factories'];
+//            $controllerArray = array_merge(array_keys($invokablesController), array_keys($factoriesController));
 
-            $aclConfig[UniAcl::CONTROLLER] = $controllerArray;
+            /*
+             * 'router' => array(
+                    'routes' => array(
+                        'backend' => array(
+                            'type' => 'literal',
+                            'options' => array(
+                                'route' => '/backend',
+                                'defaults' => array(
+                                    'controller' => 'BackEnd\Controller\Test',
+                                    'action' => 'index',
+                                ),
+                            ),
+                        ),
+                    ),
+                )
+             */
+            $controllerAction = array();
+            $routes = $config["router"]["routes"];
+            foreach($routes as $route){
+                $defaults = $route["options"]["defaults"];
+                $controllerAction[$defaults["controller"]][] = $defaults["action"];
+            }
+
+
+            $aclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
+            $cache->setArrayItem(UniAcl::CONFIG, $aclConfig);
         }
 
+        /**
+         * INIT ACL BY CONFIG
+         */
         $uniAcl = new UniAcl($aclConfig);
+        $uniAcl->init();
+
+        /**
+         * GET USER FROM SESSION
+         */
+        $uniSession = new UniSession();
+        $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
+
+        /*
+         *
+         */
+        $routeMatchInfo = $mvcEvent->getRouteMatch()->getParams();
+        $uniAcl->isUniAllowed($user, $routeMatchInfo["controller"], $routeMatchInfo["action"]);
 
 
     }

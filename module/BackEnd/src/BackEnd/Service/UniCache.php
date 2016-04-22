@@ -14,12 +14,12 @@ class UniCache extends Filesystem{
     }
 
     /**@var string $key
-     * @return array|false
+     * @return array
      */
     public function getArrayItem($key){
         $serializedArray = $this->getItem($key);
         if(is_null($serializedArray)){
-            return false;
+            return array();
         }
         return unserialize($serializedArray);
     }

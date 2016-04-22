@@ -19,7 +19,7 @@ use Zend\Permissions\Acl\Acl;
 class UniAcl extends Acl{
     const CONFIG = "UNI_ACL_CONFIG";
     const ROLE = "ROLE";
-    const CONTROLLER = "CONTROLLER";
+    const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
     const MAP_ROLE_CONTROLLER = "MAP_ROLE_CONTROLLER";
@@ -98,13 +98,13 @@ class UniAcl extends Acl{
             }
         }
         /*
-         * CONTROLLER => array(
-                "FrontEnd\Controller\User",
-                "BackEnd\Controller\Auth",
+         * CONTROLLER_ACTION => array(
+                "FrontEnd\Controller\User" => array(view, edit, add, delete, index),
+                "BackEnd\Controller\Auth" => array(login, logout, join),
             ),
          */
-        if(isset($this->config[self::CONTROLLER])){
-            foreach($this->config[self::CONTROLLER] as $controller){
+        if(isset($this->config[self::CONTROLLER_ACTION])){
+            foreach($this->config[self::CONTROLLER_ACTION] as $controller => $action){
                 $this->roleControllerAcl->addResource($controller);
             }
         }
@@ -165,11 +165,12 @@ class UniAcl extends Acl{
          */
         /*
          * case 1: no config @@
-         * add default role, "admin"
+         * add default role, "admin", "guest"
          * allow "admin" on ALL controller, action
          */
-        if(!$this->config){
+        if(!isset($this->config[self::ROLE])){
             $this->roleControllerAcl->addRole("admin");
+            $this->roleControllerAcl->addRole("guest");
             $this->roleControllerAcl->allow("admin", null, null);
         }
         /*
@@ -274,11 +275,23 @@ class UniAcl extends Acl{
      * @param string $controller
      * @param string $action
      * @return bool
+     *
+     * @WARN user may be an empty array
      */
     public function isUniAllowed($user, $controller, $action){
-        if(count($user) < 0){
-
+        /*
+         * this uni acl on init, config has NOTHING
+         * the first logged in user is "admin"
+         */
+        if(!isset($this->config[self::ROLE])){
+            $user["role"] = "admin";
+        }else{
+            //by default, NOT logged in user is "guest"
+            if(count($user) < 0){
+                $user["role"] = "guest";
+            }
         }
+
         /**
          * check acl on ROLE CONTROLLER ACTION
          */
