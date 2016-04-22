@@ -17,8 +17,6 @@ use Zend\Stdlib\ParametersInterface;
 use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController{
-    const USER = "USER";
-
     protected $serviceManager;
 
     public function __construct(ServiceManager $serviceManager){
@@ -129,8 +127,8 @@ class AuthController extends AbstractActionController{
                      * USER_HANDLER
                      */
                     $uniSession = new UniSession();
-                    $uniSession->set(UniSession::USER, self::USER, $user);
-                    var_dump($user);
+                    $uniSession->set(UniSession::USER, UniSession::USER_LOGGED, $user);
+//                    var_dump($user);
                     $this->redirect()->toUrl('/');
                 }
                /*
@@ -203,7 +201,7 @@ class AuthController extends AbstractActionController{
                      * save to session
                      */
                     $uniSession = new UniSession();
-                    $uniSession->set(UniSession::USER, self::USER, $user);
+                    $uniSession->set(UniSession::USER, UniSession::USER_LOGGED, $user);
                     $this->redirect()->toUrl("/");
                 }
             }
@@ -223,7 +221,7 @@ class AuthController extends AbstractActionController{
 
     public function logoutAction(){
         $uniSession = new UniSession();
-        $uniSession->remove(UniSession::USER, self::USER);
+        $uniSession->remove(UniSession::USER, UniSession::USER_LOGGED);
 //        var_dump("unset user from \$sessionContainer");
         return $this->redirect()->toUrl('/login');
     }

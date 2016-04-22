@@ -7,7 +7,7 @@ return array(
         ),
         'factories' => array(
             'BackEnd\Controller\Auth' => 'BackEnd\Factory\AuthControllerFactory',
-            'BackEnd\Controller\User' => 'BackEnd\Factory\UserControllerFactory',
+            'BackEnd\Controller\Role' => 'BackEnd\Factory\RoleControllerFactory',
         ),
     ),
     'router' => array(
@@ -67,7 +67,7 @@ return array(
                 'options' => array(
                     'route' => '/admin/role',
                     'defaults' => array(
-                        'controller' => 'BackEnd\Controller\User',
+                        'controller' => 'BackEnd\Controller\Role',
                         'action' => 'view',
                     ),
                 ),
@@ -77,7 +77,7 @@ return array(
                 'options' => array(
                     'route' => '/admin/user/add',
                     'defaults' => array(
-                        'controller' => 'BackEnd\Controller\User',
+                        'controller' => 'BackEnd\Controller\Role',
                         'action' => 'add',
                     ),
                 ),
@@ -87,7 +87,7 @@ return array(
                 'options' => array(
                     'route' => '/admin/user/edit',
                     'defaults' => array(
-                        'controller' => 'BackEnd\Controller\User',
+                        'controller' => 'BackEnd\Controller\Role',
                         'action' => 'edit',
                     ),
                 ),
@@ -97,7 +97,7 @@ return array(
                 'options' => array(
                     'route' => '/admin/user/delete',
                     'defaults' => array(
-                        'controller' => 'BackEnd\Controller\User',
+                        'controller' => 'BackEnd\Controller\Role',
                         'action' => 'delete',
                     ),
                 ),

@@ -35,14 +35,22 @@ class Module{
         //        $serviceManger = $app->getServiceManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+
+
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, array(
             $this,
             'checkAcl'
         ), 100);
-
     }
 
     public function checkAcl(MvcEvent $mvcEvent){
+        //if user try to log in, log out, join
+        //do not apply check acl
+        $routeMatchInfo = $mvcEvent->getRouteMatch()->getParams();
+        if($routeMatchInfo["controller"] === 'BackEnd\Controller\Auth'){
+            return;
+        }
+
         $serviceManager = $mvcEvent->getApplication()->getServiceManager();
         /**
          * GET ACL CONFIG
@@ -57,9 +65,9 @@ class Module{
 
             /** @var Application $app */
             $config = $serviceManager->get("config");
-//            $invokablesController = $config['controllers']['invokables'];
-//            $factoriesController = $config['controllers']['factories'];
-//            $controllerArray = array_merge(array_keys($invokablesController), array_keys($factoriesController));
+            //            $invokablesController = $config['controllers']['invokables'];
+            //            $factoriesController = $config['controllers']['factories'];
+            //            $controllerArray = array_merge(array_keys($invokablesController), array_keys($factoriesController));
 
             /*
              * 'router' => array(
@@ -104,9 +112,9 @@ class Module{
         /*
          *
          */
-        $routeMatchInfo = $mvcEvent->getRouteMatch()->getParams();
-        $uniAcl->isUniAllowed($user, $routeMatchInfo["controller"], $routeMatchInfo["action"]);
-
-
+        $isAllowed = $uniAcl->isUniAllowed($user, $routeMatchInfo["controller"], $routeMatchInfo["action"]);
+        if(!$isAllowed){
+            die("permission deny");
+        }
     }
 }

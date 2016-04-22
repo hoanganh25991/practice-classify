@@ -1,11 +1,11 @@
 <?php
 namespace BackEnd\Factory;
-use BackEnd\Controller\UserController;
+use BackEnd\Controller\RoleController;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\ServiceManager\ServiceManager;
 
-class UserControllerFactory implements FactoryInterface{
+class RoleControllerFactory implements FactoryInterface{
 
     /**
      * Create service
@@ -21,6 +21,6 @@ class UserControllerFactory implements FactoryInterface{
          * by call getServiceLocator, we get back the big daddy ServiceManger
          * @var ServiceManager $serviceManager */
         $serviceManager = $serviceLocator->getServiceLocator();
-        return new UserController($serviceManager);
+        return new RoleController($serviceManager);
     }
 }

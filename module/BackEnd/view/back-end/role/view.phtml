@@ -1,0 +1,134 @@
+﻿<h3><?php var_dump($this->_vars); ?></h3>
+<input type="hidden" name="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
+<input type="hidden" name="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
+<div class="row">
+    <div class="col-md-8">
+        <div>
+            <span class="h3">Role</span>
+            <span class="btn btn-success pull-right" id="btnAddRole">add</span>
+        </div>
+
+        <hr>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>role</th>
+                <th>inherit</th>
+            </tr>
+            </thead>
+            <tbody id="mapRoleControllerAction">
+            <tr>
+                <td>
+                    <select class="selectpicker">
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option selected>Relish</option>
+                    </select>
+                <td>
+                    <select class="selectpicker">
+                        <option>Mustard</option>
+                        <option>Ketchup</option>
+                        <option selected>Relish</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <span class="btn btn-sm btn-default" id="btnMoreRole">more role</span>
+        <h3>Map Role Controller-Action</h3>
+        <hr>
+        <div>
+            <select class="selectpicker">
+                <option>Mustard</option>
+                <option>Ketchup</option>
+                <option selected>Relish</option>
+            </select>
+            <button class="btn btn-default">choose contrx</button>
+            <div>
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <span class="panel-title" data-toggle="collapse" href="#collapseOne" class="collapsed">FrontEnd\Controller\Index</span>
+                    </div>
+                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                        <div class="panel-body">
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 1</label>
+                            </div>
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 2</label>
+                            </div>
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 3</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <span class="panel-title" data-toggle="collapse" href="#collapseSecond" class="collapsed">BackEnd\Controller\Role</span>
+                    </div>
+                    <div id="collapseSecond" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                        <div class="panel-body">
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 1</label>
+                            </div>
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 2</label>
+                            </div>
+                            <div class="checkbox action">
+                                <label><input type="checkbox" value="">Option 3</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <button class="btn btn-sm btn-default" id="btnMoreRoleControllerAction">more role controller-action</button>
+    </div><!--   end of column-->
+    <h3>Map Role Special</h3>
+    <hr>
+    <div>
+        <select class="selectpicker">
+            <option>Mustard</option>
+            <option>Ketchup</option>
+            <option selected>Relish</option>
+        </select>
+    </div>
+</div>
+
+<script>
+    (function($){
+        $(document).ready(function(){
+            const ROLE = "ROLE";
+            const CONTROLLER_ACTION = "CONTROLLER_ACTION";
+            const ACTION = "ACTION";
+            const SPECIAL = "SPECIAL";
+            const MAP_ROLE_CONTROLLER = "MAP_ROLE_CONTROLLER";
+            const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
+            const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
+            var uniAclConfig = $("input[name = 'uniAclConfig']").val();
+            var userActionOnRole = $("input[name = 'userActionOnRole']").val();
+            console.log(userActionOnRole);
+            var roleTableBody = $("#roleTableBody");
+            console.log(uniAclConfig);
+            /**
+             * ROLE => array(
+             "guest" => null,
+             "staff" => "guest",
+             "editor" => "staff",
+             "admin" => "editor"
+             ),
+             */
+//            var roleTableData = uniAclConfig[ROLE];console.log(roleTableData);
+//            //if has role table
+//            if(roleTableData){
+
+//            }
+            //if no role table
+
+        });
+    })(jQuery);
+</script>
+

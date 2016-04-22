@@ -170,7 +170,6 @@ class UniAcl extends Acl{
          */
         if(!isset($this->config[self::ROLE])){
             $this->roleControllerAcl->addRole("admin");
-            $this->roleControllerAcl->addRole("guest");
             $this->roleControllerAcl->allow("admin", null, null);
         }
         /*
@@ -280,40 +279,62 @@ class UniAcl extends Acl{
      */
     public function isUniAllowed($user, $controller, $action){
         /*
-         * this uni acl on init, config has NOTHING
-         * the first logged in user is "admin"
+         * user may [], empty array
          */
+        /**
+         * config has NO ROLE
+         */
+        //add role for user
+        //the first logged in user is "admin"
         if(!isset($this->config[self::ROLE])){
             $user["role"] = "admin";
-        }else{
-            //by default, NOT logged in user is "guest"
-            if(count($user) < 0){
+        }
+        /**
+         * config has ROLE
+         * unlogged|logged user without role, is "guest"
+         */
+        if(isset($this->config[self::ROLE])){
+            if(!isset($user["role"])){
                 $user["role"] = "guest";
             }
         }
-
+        var_dump($user);
         /**
-         * check acl on ROLE CONTROLLER ACTION
+         * CHECK HAS ROLE FIRST
+         * nothing ensure role of user is loaded into acl
+         * corrupt, cache not update,...
          */
-        if($this->roleControllerAcl->isAllowed($user["role"], $controller, $action)){
-            return true;
+        /**
+         * CHECK AUL on ROLE CONTROLLER ACTION
+         */
+        if($this->roleControllerAcl->hasRole($user["role"])){
+            if($this->roleControllerAcl->isAllowed($user["role"], $controller, $action)){
+                return true;
+            }
         }
         /**
-         * check acl on ROLE SPECIAL
+         * CHECK AUL on ROLE SPECIAL
          */
-        if($this->roleSpecialAcl->isAllowed($user["role"], $controller, $action)){
-            return true;
+        //by default "map role controller action" always has
+        //but "map role special" may not
+        if($this->roleSpecialAcl->hasRole($user["role"])){
+            if($this->roleSpecialAcl->isAllowed($user["role"], $controller, $action)){
+                return true;
+            }
         }
         /**
-         * check acl on USER SPECIAL
+         * CHECK AUL on USER SPECIAL
+         * only check on loged user
          */
         /** @WARN not added role
          * isAllowed by default through exception on not added role
          * but when check user special where "user id" as role
          * this id may not added*/
-        if($this->userSpecialAcl->hasRole($user["id"])){
-            if($this->userSpecialAcl->isAllowed($user["id"], $controller, $action)){
-                return true;
+        if(isset($user["id"])){
+            if($this->userSpecialAcl->hasRole($user["id"])){
+                if($this->userSpecialAcl->isAllowed($user["id"], $controller, $action)){
+                    return true;
+                }
             }
         }
         return false;
