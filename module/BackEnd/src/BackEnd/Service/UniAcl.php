@@ -16,23 +16,25 @@ use Zend\Permissions\Acl\Acl;
  * role has its own "special"
  * user also has its own "special", not effect by role ^^
  */
-class UniAcl extends Acl{
+class UniAcl{
     const CONFIG = "UNI_ACL_CONFIG";
     const ROLE = "ROLE";
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
-    const MAP_ROLE_CONTROLLER = "MAP_ROLE_CONTROLLER";
+    const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER";
     const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
     const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
+    //    const MAP_USER_ROLE = "MAP_USER_ROLE";
 
     /** @var  array */
     protected $config;
-    protected $roleControllerAcl;
+    protected $roleControllerActionAcl;
     protected $roleSpecialAcl;
     protected $userSpecialAcl;
 
     protected $roleArray;
+    protected $controllerAction;
 
     /*
      * ROLE => array(
@@ -68,7 +70,7 @@ class UniAcl extends Acl{
      */
     public function __construct(array $config){
         $this->config = $config;
-        $this->roleControllerAcl = new Acl();
+        $this->roleControllerActionAcl = new Acl();
         $this->roleSpecialAcl = new Acl();
         $this->userSpecialAcl = new Acl();
     }
@@ -94,9 +96,11 @@ class UniAcl extends Acl{
          */
         if(isset($this->config[self::ROLE])){
             foreach($this->config[self::ROLE] as $role => $inherit){
-                $this->roleControllerAcl->addRole($role, $inherit);
+                var_dump($role, $inherit);
+                $this->roleControllerActionAcl->addRole($role, $inherit);
             }
         }
+        var_dump($this->roleControllerActionAcl->getRoles());
         /*
          * CONTROLLER_ACTION => array(
                 "FrontEnd\Controller\User" => array(view, edit, add, delete, index),
@@ -105,7 +109,7 @@ class UniAcl extends Acl{
          */
         if(isset($this->config[self::CONTROLLER_ACTION])){
             foreach($this->config[self::CONTROLLER_ACTION] as $controller => $action){
-                $this->roleControllerAcl->addResource($controller);
+                $this->roleControllerActionAcl->addResource($controller);
             }
         }
         /*
@@ -116,10 +120,10 @@ class UniAcl extends Acl{
                 )
             ),
          */
-        if(isset($this->config[self::MAP_ROLE_CONTROLLER])){
-            foreach($this->config[self::MAP_ROLE_CONTROLLER] as $role => $controllerAction){
+        if(isset($this->config[self::MAP_ROLE_CONTROLLER_ACTION])){
+            foreach($this->config[self::MAP_ROLE_CONTROLLER_ACTION] as $role => $controllerAction){
                 foreach($controllerAction as $controller => $action){
-                    $this->roleControllerAcl->allow($role, $controller, $action);
+                    $this->roleControllerActionAcl->allow($role, $controller, $action);
                 }
             }
         }
@@ -133,9 +137,15 @@ class UniAcl extends Acl{
                 )
             ),
          */
+        if(isset($this->config[self::CONTROLLER_ACTION])){
+            foreach($this->config[self::CONTROLLER_ACTION] as $controller => $action){
+                $this->roleSpecialAcl->addResource($controller);
+            }
+        }
         if(isset($this->config[self::MAP_ROLE_SPECIAL])){
             foreach($this->config[self::MAP_ROLE_SPECIAL] as $role => $controllerAction){
                 foreach($controllerAction as $controller => $action){
+                    $this->roleSpecialAcl->addRole($role);
                     $this->roleSpecialAcl->allow($role, $controller, $action);
                 }
             }
@@ -151,11 +161,18 @@ class UniAcl extends Acl{
                 )
             )
          */
+        if(isset($this->config[self::CONTROLLER_ACTION])){
+            foreach($this->config[self::CONTROLLER_ACTION] as $controller => $action){
+                $this->userSpecialAcl->addResource($controller);
+            }
+        }
         if(isset($this->config[self::MAP_USER_SPECIAL])){
             foreach($this->config[self::MAP_USER_SPECIAL] as $role => $controllerAction){
                 foreach($controllerAction as $controller => $action){
+                    var_dump($role);
                     $this->userSpecialAcl->addRole($role);
                     $this->userSpecialAcl->allow($role, $controller, $action);
+                    var_dump("la so deo duoc ah");
                 }
             }
         }
@@ -169,8 +186,8 @@ class UniAcl extends Acl{
          * allow "admin" on ALL controller, action
          */
         if(!isset($this->config[self::ROLE])){
-            $this->roleControllerAcl->addRole("admin");
-            $this->roleControllerAcl->allow("admin", null, null);
+            $this->roleControllerActionAcl->addRole("admin");
+            $this->roleControllerActionAcl->allow("admin", null, null);
         }
         /*
          * case *: exception from "Acl"
@@ -183,7 +200,7 @@ class UniAcl extends Acl{
      * @return array
      */
     public function getControllerActionOnRole($role){
-        $map = $this->config[self::MAP_ROLE_CONTROLLER];
+        $map = $this->config[self::MAP_ROLE_CONTROLLER_ACTION];
         //reset rolleArray
         //previous call may add value into roleArray
         $this->roleArray = array();
@@ -307,8 +324,8 @@ class UniAcl extends Acl{
         /**
          * CHECK AUL on ROLE CONTROLLER ACTION
          */
-        if($this->roleControllerAcl->hasRole($user["role"])){
-            if($this->roleControllerAcl->isAllowed($user["role"], $controller, $action)){
+        if($this->roleControllerActionAcl->hasRole($user["role"])){
+            if($this->roleControllerActionAcl->isAllowed($user["role"], $controller, $action)){
                 return true;
             }
         }
@@ -338,5 +355,13 @@ class UniAcl extends Acl{
             }
         }
         return false;
+    }
+
+    public function dit($role, $controller, $action){
+        $this->roleControllerActionAcl->deny($role, $controller, $action);
+    }
+
+    public function getACL(){
+        return $this->roleControllerActionAcl;
     }
 }

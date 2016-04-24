@@ -1,6 +1,6 @@
 <?php
-'uniAcl' => array(
-        'roles' => array(
+\BackEnd\Service\UniAcl::CONFIG => array(
+        \BackEnd\Service\UniAcl::ROLE => array(
             'guest' => null,
             'editor' => 'guest',
             'admin' => 'editor',
@@ -10,7 +10,7 @@
          * allow($role, $resource, $privilege)
          * where $privilege is a FILTER on $resource
          */
-        'mapRoleResourcePrivilege' => array(
+        \BackEnd\Service\UniAcl::MAP_ROLE_CONTROLLER_ACTION => array(
             'guest' => array(
                 'FrontEnd\Controller\Index' => array('index'),
                 'FrontEnd\Controller\Keep' => array('index'),
@@ -38,13 +38,13 @@
          * map directly from role to resource.privilege
          * check by array(key) === value
          */
-        'mapRoleSpecial' => array(
+        \BackEnd\Service\UniAcl::MAP_ROLE_SPECIAL => array(
             'editor' => 'FrontEnd\Controller\SpecialGift\index',
         ),
         /**
          * @warn these name NEED store in Unimedia as static/const
          */
-        'mapUserIdRole' => array(
+        \BackEnd\Service\UniAcl::MAP_USER_SPECIAL => array(
             '1' => 'admin',
             '2' => 'editor',
             '3' => 'guest'
@@ -58,3 +58,4 @@
             '3' => 'BackEnd\Controller\User\view'
         ),
     ),
+),

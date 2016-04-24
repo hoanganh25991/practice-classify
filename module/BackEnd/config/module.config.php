@@ -1,4 +1,5 @@
 <?php
+var_dump(\BackEnd\Service\UniAcl::CONFIG);
 return array(
     'controllers' => array(
         'invokables' => array(
@@ -75,7 +76,7 @@ return array(
             'user-add' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/admin/user/add',
+                    'route' => '/admin/role/add',
                     'defaults' => array(
                         'controller' => 'BackEnd\Controller\Role',
                         'action' => 'add',
@@ -85,7 +86,7 @@ return array(
             'user-edit' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/admin/user/edit',
+                    'route' => '/admin/role/edit',
                     'defaults' => array(
                         'controller' => 'BackEnd\Controller\Role',
                         'action' => 'edit',
@@ -95,7 +96,7 @@ return array(
             'user-delete' => array(
                 'type' => 'literal',
                 'options' => array(
-                    'route' => '/admin/user/delete',
+                    'route' => '/admin/role/delete',
                     'defaults' => array(
                         'controller' => 'BackEnd\Controller\Role',
                         'action' => 'delete',
@@ -152,5 +153,58 @@ return array(
             'UniAcl' => 'BackEnd\Factory\UniAclFactory',
 
         )
-    )
+    ),
+    \BackEnd\Service\UniAcl::CONFIG => array(
+        \BackEnd\Service\UniAcl::ROLE => array(
+            'guest' => null,
+            'editor' => 'guest',
+            'admin' => 'editor',
+        ),
+        /**
+         * role => (resource => privilege)
+         * allow($role, $resource, $privilege)
+         * where $privilege is a FILTER on $resource
+         */
+        \BackEnd\Service\UniAcl::MAP_ROLE_CONTROLLER_ACTION => array(
+            'guest' => array(
+                'FrontEnd\Controller\Index' => array('index'),
+                'FrontEnd\Controller\Keep' => array('index'),
+                'FrontEnd\Controller\Calm' => array('index'),
+                'FrontEnd\Controller\Try' => array('index'),
+                'FrontEnd\Controller\Hard' => array('index'),
+                'BackEnd\Controller\Auth' => array(
+                    'login',
+                    'logout'
+                ),
+            ),
+            'editor' => array(
+                'BackEnd\Controller\Role' => array(
+                    'view',
+                    'add',
+                    'edit'
+                )
+            ),
+            'admin' => array(
+                'BackEnd\Controller\Role' => null,
+            )
+        ),
+        /**
+         * role => resource.privilege
+         * map directly from role to resource.privilege
+         * check by array(key) === value
+         */
+        \BackEnd\Service\UniAcl::MAP_ROLE_SPECIAL => array(
+            'editor' => array(
+                'FrontEnd\Controller\SpecialGift' => array('index')
+            )
+        ),
+        /**
+         * @warn these name NEED store in Unimedia as static/const
+         */
+        \BackEnd\Service\UniAcl::MAP_USER_SPECIAL => array(
+            'user_1' => array(
+                'FrontEnd\Controller\SpecialGift' => array('index')
+            )
+        ),
+    ),
 );

@@ -58,10 +58,10 @@ class Module{
         /** @var UniCache $cache */
         $cache = $serviceManager->get("UniCache");
 
-        /** @var array $aclConfig */
-        $aclConfig = $cache->getArrayItem(UniAcl::CONFIG);
-        if(!(count($aclConfig) > 0)){
-            $aclConfig = array();
+        /** @var array $uniAclConfig */
+        $uniAclConfig = $cache->getArrayItem(UniAcl::CONFIG);
+        if(!(count($uniAclConfig) > 0)){
+            $uniAclConfig = array();
 
             /** @var Application $app */
             $config = $serviceManager->get("config");
@@ -93,22 +93,33 @@ class Module{
             }
 
 
-            $aclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
-            $cache->setArrayItem(UniAcl::CONFIG, $aclConfig);
+            $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
+            $tempConfig = $config[UniAcl::CONFIG];
+            $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
+            $uniAclConfig = $tempConfig;
+            var_dump($uniAclConfig);
+            $cache->setArrayItem(UniAcl::CONFIG, $uniAclConfig);
         }
+
 
         /**
          * INIT ACL BY CONFIG
          */
-        $uniAcl = new UniAcl($aclConfig);
+        $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
+        $uniAcl->dit("admin", 'FrontEnd\Controller\Index', null);
+        $uniAcl->dit("admin", 'FrontEnd\Controller\Keep', null);
+//        $uniAcl->dit("admin", 'BackEnd\Controller\Role', null);
+        $uniAcl->dit("editor", 'FrontEnd\Controller\Index', null);
+        $uniAcl->getACL()->removeRole("editor");
+        $uniAcl->getACL()->addRole("editor", "admin");
 
         /**
          * GET USER FROM SESSION
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-
+        $user["role"] = "editor";
         /*
          *
          */
