@@ -100,7 +100,6 @@ class UniAcl{
                 $this->roleControllerActionAcl->addRole($role, $inherit);
             }
         }
-        var_dump($this->roleControllerActionAcl->getRoles());
         /*
          * CONTROLLER_ACTION => array(
                 "FrontEnd\Controller\User" => array(view, edit, add, delete, index),
@@ -156,7 +155,7 @@ class UniAcl{
          */
         /*
          * MAP_USER_SPECIAL => array(
-                "1" => array(
+                "user_id_1" => array(
                     "controller" => array(action1),
                 )
             )
@@ -169,10 +168,9 @@ class UniAcl{
         if(isset($this->config[self::MAP_USER_SPECIAL])){
             foreach($this->config[self::MAP_USER_SPECIAL] as $role => $controllerAction){
                 foreach($controllerAction as $controller => $action){
-                    var_dump($role);
+                    $role = "user_id_" . $role;
                     $this->userSpecialAcl->addRole($role);
                     $this->userSpecialAcl->allow($role, $controller, $action);
-                    var_dump("la so deo duoc ah");
                 }
             }
         }
@@ -199,7 +197,7 @@ class UniAcl{
      * @param string $role
      * @return array
      */
-    public function getControllerActionOnRole($role){
+    public function getAllInheritOnRole($role){
         $map = $this->config[self::MAP_ROLE_CONTROLLER_ACTION];
         //reset rolleArray
         //previous call may add value into roleArray
@@ -210,14 +208,14 @@ class UniAcl{
         //roleArray has stored roles which this role inherits
 
         //get all controller action from role by map
-        $controllerAction = array();
-        foreach($this->roleArray as $role){
-            foreach($map[$role] as $controllerAction){
-                $controllerAction[] = $controllerAction;
-            }
-        }
+        //        $controllerAction = array();
+        //        foreach($this->roleArray as $role){
+        //            foreach($map[$role] as $controllerAction){
+        //                $controllerAction[$role] = $controllerAction;
+        //            }
+        //        }
 
-        return $controllerAction;
+        return $this->roleArray;
     }
 
     /*
@@ -295,28 +293,23 @@ class UniAcl{
      * @WARN user may be an empty array
      */
     public function isUniAllowed($user, $controller, $action){
-        var_dump($user);
-        /*
-         * user may [], empty array
-         */
         /**
          * config has NO ROLE
          */
         //add role for user
-        //the first logged in user is "admin"
-//        if(!isset($this->config[self::ROLE])){
-//            $user["role"] = "admin";
-//        }
-//        /**
-//         * config has ROLE
-//         * unlogged|logged user without role, is "guest"
-//         */
-//        if(isset($this->config[self::ROLE])){
-//            if(!isset($user["role"])){
-//                $user["role"] = "guest";
-//            }
-//        }
-//        var_dump($user);
+        if(!isset($this->config[self::ROLE])){
+            $user["role"] = "admin";
+        }
+        /**
+         * config has ROLE
+         * unlogged|logged user without role, is "guest"
+         */
+        if(isset($this->config[self::ROLE])){
+            if(!isset($user["role"])){
+                $user["role"] = "guest";
+            }
+        }
+        var_dump($user);
         /**
          * CHECK HAS ROLE FIRST
          * nothing ensure role of user is loaded into acl
@@ -349,7 +342,11 @@ class UniAcl{
          * but when check user special where "user id" as role
          * this id may not added*/
         if(isset($user["id"])){
-            if($this->userSpecialAcl->hasRole($user["id"])){
+            /**
+             * @WARN role on user id need explicit compile
+             */
+            $role = "user_id_" . $user["id"];
+            if($this->userSpecialAcl->hasRole($role)){
                 if($this->userSpecialAcl->isAllowed($user["id"], $controller, $action)){
                     return true;
                 }
@@ -358,11 +355,7 @@ class UniAcl{
         return false;
     }
 
-    public function dit($role, $controller, $action){
-        $this->roleControllerActionAcl->deny($role, $controller, $action);
-    }
+    public function uniDeny($role, $controller, $privilege){
 
-    public function getACL(){
-        return $this->roleControllerActionAcl;
     }
 }

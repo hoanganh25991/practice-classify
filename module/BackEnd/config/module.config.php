@@ -202,7 +202,7 @@ return array(
          * @warn these name NEED store in Unimedia as static/const
          */
         \BackEnd\Service\UniAcl::MAP_USER_SPECIAL => array(
-            'user_1' => array(
+            '1' => array(
                 'FrontEnd\Controller\SpecialGift' => array('index')
             )
         ),
