@@ -382,6 +382,9 @@ class UniAcl{
 
     public function uniDeny($role, $controller, $privilege, $typeAcl){
         if($typeAcl === self::ROLE_CONTROLLER_ACTION){
+            if(!$this->roleControllerActionAcl->isAllowed($role, $controller, $privilege)){
+                return;
+            }
             $this->roleControllerActionAcl->deny($role, $controller, $privilege);
             /**
              * editor deny from roleA >>> guest also deny from roleA
