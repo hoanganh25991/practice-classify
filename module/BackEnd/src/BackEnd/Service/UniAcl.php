@@ -37,6 +37,8 @@ class UniAcl{
     protected $roleArray;
     protected $controllerAction;
 
+    protected $tempConfig;
+
     /*
      * ROLE => array(
             "guest" => null,
@@ -203,7 +205,7 @@ class UniAcl{
         //reset rolleArray
         //previous call may add value into roleArray
         $this->roleArray = array();
-        $this->loopParent($role);
+        $this->loopResource($role);
 
         //after loopInherit
         //roleArray has stored roles which this role inherits
@@ -223,7 +225,7 @@ class UniAcl{
      * GET ALL ROLES which this role inherits
      * loop forward to get all parent roles
      */
-    private function loopParent($role){
+    private function loopResource($role){
         /*
          * if parent role not exist add it into roleArry
          * avoid duplicate
@@ -244,7 +246,7 @@ class UniAcl{
             if(!array_key_exists($inherit, $this->roleArray)){
                 $this->roleArray[] = $inherit;
             }
-            $this->loopParent($inherit);
+            $this->loopResource($inherit);
         }
         if(is_array($inherit)){
             //this role has MANY|ARRAY child
@@ -252,7 +254,16 @@ class UniAcl{
                 if(!array_key_exists($singleInherit, $this->roleArray)){
                     $this->roleArray[] = $singleInherit;
                 }
-                $this->loopParent($singleInherit);
+                $this->loopResource($singleInherit);
+            }
+        }
+    }
+
+    public function loopParent($role){
+        $this->roleArray = array();
+        foreach($this->roleControllerActionAcl->getRoles() as $parentRole){
+            if($this->roleControllerActionAcl->inheritsRole($role, $parentRole)){
+                $this->roleArray[] = $parentRole;
             }
         }
     }
@@ -261,6 +272,7 @@ class UniAcl{
      * @param $role
      */
     public function loopInherit($role){
+        $this->roleArray = array();
         foreach($this->roleControllerActionAcl->getRoles() as $inheritRole){
             if($this->roleControllerActionAcl->inheritsRole($inheritRole, $role)){
                 $this->roleArray[] = $inheritRole;
@@ -368,15 +380,15 @@ class UniAcl{
     }
 
 
-
     public function uniDeny($role, $controller, $privilege, $typeAcl){
         if($typeAcl === self::ROLE_CONTROLLER_ACTION){
+            $this->roleControllerActionAcl->deny($role, $controller, $privilege);
             /**
              * editor deny from roleA >>> guest also deny from roleA
              */
             $this->roleArray = array();
             $this->loopParent($role);
-            foreach($this->roleArray  as $parentRole){
+            foreach($this->roleArray as $parentRole){
                 $this->roleControllerActionAcl->deny($parentRole, $controller, $privilege);
             }
 
@@ -398,5 +410,146 @@ class UniAcl{
             $this->userSpecialAcl->deny($role, $controller, $privilege);
             return;
         }
+    }
+
+    public function buildConfig(){
+        $this->tempConfig = array();
+        /**
+         * build CONTROLLER ACTION
+         */
+        $this->tempConfig[self::CONTROLLER_ACTION] = $this->config[self::CONTROLLER_ACTION];
+        //        var_dump($tempConfig);
+        /**
+         * buid ROLE
+         */
+        foreach($this->roleControllerActionAcl->getRoles() as $role){
+            $this->roleArray = array();
+            $this->loopParent($role);
+            /*
+             * bcs, parent role by default is null, not empty array
+             * convert empty array to null as expect
+             */
+            if(count($this->roleArray) === 0){
+                $this->roleArray = null;
+            }
+            $this->tempConfig[self::ROLE][$role] = $this->roleArray;
+        }
+        //        var_dump($tempConfig);
+        /**
+         * MAP ROLE CONTROLLER ACTION
+         */
+        /*
+         * map role for f1 parent, who not inherit from anyone
+         */
+        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+            if(is_null($inheritRole)){
+                $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
+            }
+        }
+        /*
+         * map for child
+         */
+        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+            if(is_null($inheritRole)){
+            }
+            $arrayDiff = $this->config[self::CONTROLLER_ACTION];
+            if(is_string($inheritRole)){
+                $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
+                    $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$inheritRole]);
+            }
+            if(is_array($inheritRole)){
+                foreach($inheritRole as $s_inheritRole){
+                    $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
+                        $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$s_inheritRole]);
+                }
+            }
+//            var_dump($arrayDiff);
+            $this->f($arrayDiff, $this->roleControllerActionAcl, $role);
+        }
+        //        $arrayDiff = $this->config[self::CONTROLLER_ACTION];
+        //        $arrayDiff = $this->arrayRecursiveDiff($arrayDiff, $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION]["guest"]);
+        //        var_dump($arrayDiff);
+        //        $this->f($arrayDiff, "editor");
+//        var_dump($this->tempConfig);
+
+        /**
+         * map ROLE SPECIAL
+         */
+        $allRoles = $this->roleControllerActionAcl->getRoles();
+        foreach($allRoles as $role){
+            if($this->roleSpecialAcl->hasRole($role)){
+                $this->r($this->config[self::CONTROLLER_ACTION], $this->roleSpecialAcl, $role);
+            }
+        }
+
+        /**
+         * map USER SPECIAL
+         */
+        $allRoles = $this->userSpecialAcl->getRoles();
+        foreach($allRoles as $role){
+            $this->u($this->config[self::CONTROLLER_ACTION], $this->userSpecialAcl, $role);
+        }
+        var_dump($this->tempConfig);
+        return $this->tempConfig;
+    }
+
+    /**
+     * @param $controllerAction
+     * @param Acl $typeAcl
+     * @param $role
+     */
+    private function f($controllerAction, $typeAcl, $role){
+        foreach($controllerAction as $controller => $actionArray){
+            foreach($actionArray as $action){
+                //check isAllowed on each (controller, action)
+                if($typeAcl->isAllowed($role, $controller, $action)){
+                    $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role][$controller][] = $action;
+                }
+            }
+        }
+    }
+
+    private function r($controllerAction, $typeAcl, $role){
+        foreach($controllerAction as $controller => $actionArray){
+            foreach($actionArray as $action){
+                //check isAllowed on each (controller, action)
+                if($typeAcl->isAllowed($role, $controller, $action)){
+                    $this->tempConfig[self::MAP_ROLE_SPECIAL][$role][$controller][] = $action;
+                }
+            }
+        }
+    }
+
+    private function u($controllerAction, $typeAcl, $role){
+        foreach($controllerAction as $controller => $actionArray){
+            foreach($actionArray as $action){
+                //check isAllowed on each (controller, action)
+                if($typeAcl->isAllowed($role, $controller, $action)){
+                    $this->tempConfig[self::MAP_USER_SPECIAL][$role][$controller][] = $action;
+                }
+            }
+        }
+    }
+
+    function arrayRecursiveDiff($aArray1, $aArray2){
+        $aReturn = array();
+
+        foreach($aArray1 as $mKey => $mValue){
+            if(array_key_exists($mKey, $aArray2)){
+                if(is_array($mValue)){
+                    $aRecursiveDiff = $this->arrayRecursiveDiff($mValue, $aArray2[$mKey]);
+                    if(count($aRecursiveDiff)){
+                        $aReturn[$mKey] = $aRecursiveDiff;
+                    }
+                }else{
+                    if($mValue != $aArray2[$mKey]){
+                        $aReturn[$mKey] = $mValue;
+                    }
+                }
+            }else{
+                $aReturn[$mKey] = $mValue;
+            }
+        }
+        return $aReturn;
     }
 }

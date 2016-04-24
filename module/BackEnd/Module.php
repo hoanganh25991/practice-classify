@@ -85,15 +85,17 @@ class Module{
          */
         $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
-        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+//        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+//        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+//        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Calm', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        $uniAcl->buildConfig();
         /**
          * GET USER FROM SESSION
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-        $user["role"] = "admin";
+        $user["role"] = "guest";
+
         /*
          *
          */
