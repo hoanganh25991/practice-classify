@@ -76,19 +76,24 @@ class Module{
 
 
             $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
-            $cache->setArrayItem(UniAcl::CONFIG, $uniAclConfig);
+            $tempConfig = $config[UniAcl::CONFIG];
+            $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
+            $cache->setArrayItem(UniAcl::CONFIG, $tempConfig);
         }
         /**
          * INIT ACL BY CONFIG
          */
         $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
+        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Index', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         /**
          * GET USER FROM SESSION
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-        $user["role"] = "guest";
+        $user["role"] = "admin";
         /*
          *
          */

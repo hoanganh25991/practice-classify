@@ -25,8 +25,9 @@ class UniAcl{
     const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER";
     const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
     const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
-    //    const MAP_USER_ROLE = "MAP_USER_ROLE";
-
+    const ROLE_CONTROLLER_ACTION = "ROLE_CONTROLLER_ACTION";
+    const ROLE_SPECIAL = "ROLE_SPECIAL";
+    const USER_SPECIAL = "USER_SPECIAL";
     /** @var  array */
     protected $config;
     protected $roleControllerActionAcl;
@@ -202,7 +203,7 @@ class UniAcl{
         //reset rolleArray
         //previous call may add value into roleArray
         $this->roleArray = array();
-        $this->loopInherit($role);
+        $this->loopParent($role);
 
         //after loopInherit
         //roleArray has stored roles which this role inherits
@@ -222,12 +223,12 @@ class UniAcl{
      * GET ALL ROLES which this role inherits
      * loop forward to get all parent roles
      */
-    private function loopInherit($role){
+    private function loopParent($role){
         /*
          * if parent role not exist add it into roleArry
          * avoid duplicate
          */
-        if(!array_key_exists($this->roleArray, $role)){
+        if(!array_key_exists($role, $this->roleArray)){
             $this->roleArray[] = $role;
         }
         /*
@@ -240,18 +241,29 @@ class UniAcl{
             return;
         }
         if(is_string($inherit)){
-            if(!array_key_exists($this->roleArray, $inherit)){
+            if(!array_key_exists($inherit, $this->roleArray)){
                 $this->roleArray[] = $inherit;
             }
-            $this->loopInherit($inherit);
+            $this->loopParent($inherit);
         }
         if(is_array($inherit)){
             //this role has MANY|ARRAY child
             foreach($inherit as $singleInherit){
-                if(!array_key_exists($this->roleArray, $singleInherit)){
+                if(!array_key_exists($singleInherit, $this->roleArray)){
                     $this->roleArray[] = $singleInherit;
                 }
-                $this->loopInherit($singleInherit);
+                $this->loopParent($singleInherit);
+            }
+        }
+    }
+
+    /**
+     * @param $role
+     */
+    public function loopInherit($role){
+        foreach($this->roleControllerActionAcl->getRoles() as $inheritRole){
+            if($this->roleControllerActionAcl->inheritsRole($inheritRole, $role)){
+                $this->roleArray[] = $inheritRole;
             }
         }
     }
@@ -355,7 +367,36 @@ class UniAcl{
         return false;
     }
 
-    public function uniDeny($role, $controller, $privilege){
 
+
+    public function uniDeny($role, $controller, $privilege, $typeAcl){
+        if($typeAcl === self::ROLE_CONTROLLER_ACTION){
+            /**
+             * editor deny from roleA >>> guest also deny from roleA
+             */
+            $this->roleArray = array();
+            $this->loopParent($role);
+            foreach($this->roleArray  as $parentRole){
+                $this->roleControllerActionAcl->deny($parentRole, $controller, $privilege);
+            }
+
+            /**
+             * editor deny from role A >>> admin NOT deny from
+             */
+            $this->roleArray = array();
+            $this->loopInherit($role);
+            foreach($this->roleArray as $inheritRole){
+                $this->roleControllerActionAcl->allow($inheritRole, $controller, $privilege);
+            }
+            return;
+        }
+        if($typeAcl === self::ROLE_SPECIAL){
+            $this->roleSpecialAcl->deny($role, $controller, $privilege);
+            return;
+        }
+        if($typeAcl === self::USER_SPECIAL){
+            $this->userSpecialAcl->deny($role, $controller, $privilege);
+            return;
+        }
     }
 }
