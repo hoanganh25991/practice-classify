@@ -295,6 +295,7 @@ class UniAcl{
      * @WARN user may be an empty array
      */
     public function isUniAllowed($user, $controller, $action){
+        var_dump($user);
         /*
          * user may [], empty array
          */
@@ -303,19 +304,19 @@ class UniAcl{
          */
         //add role for user
         //the first logged in user is "admin"
-        if(!isset($this->config[self::ROLE])){
-            $user["role"] = "admin";
-        }
-        /**
-         * config has ROLE
-         * unlogged|logged user without role, is "guest"
-         */
-        if(isset($this->config[self::ROLE])){
-            if(!isset($user["role"])){
-                $user["role"] = "guest";
-            }
-        }
-        var_dump($user);
+//        if(!isset($this->config[self::ROLE])){
+//            $user["role"] = "admin";
+//        }
+//        /**
+//         * config has ROLE
+//         * unlogged|logged user without role, is "guest"
+//         */
+//        if(isset($this->config[self::ROLE])){
+//            if(!isset($user["role"])){
+//                $user["role"] = "guest";
+//            }
+//        }
+//        var_dump($user);
         /**
          * CHECK HAS ROLE FIRST
          * nothing ensure role of user is loaded into acl

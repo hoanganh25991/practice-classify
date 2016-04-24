@@ -9,6 +9,7 @@ use BackEnd\Service\UniSession;
 use Zend\Mvc\Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Permissions\Acl\Acl;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Session\Container;
 use Zend\Stdlib\ArrayUtils;
@@ -107,12 +108,35 @@ class Module{
          */
         $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
-        $uniAcl->dit("admin", 'FrontEnd\Controller\Index', null);
-        $uniAcl->dit("admin", 'FrontEnd\Controller\Keep', null);
-//        $uniAcl->dit("admin", 'BackEnd\Controller\Role', null);
-        $uniAcl->dit("editor", 'FrontEnd\Controller\Index', null);
-        $uniAcl->getACL()->removeRole("editor");
-        $uniAcl->getACL()->addRole("editor", "admin");
+        //        $uniAcl->dit("admin", 'FrontEnd\Controller\Index', null);
+        //        $uniAcl->dit("admin", 'FrontEnd\Controller\Keep', null);
+        //        $uniAcl->dit("admin", 'BackEnd\Controller\Role', null);
+        //        $uniAcl->dit("editor", 'FrontEnd\Controller\Index', null);
+        //        $uniAcl->getACL()->removeRole("editor");
+        //        $uniAcl->getACL()->addRole("editor", "admin");
+        //        $uniAcl->getACL()->removeAllow("editor", 'FrontEnd\Controller\Keep', 'index');
+        //        $uniAcl->getACL()->deny("editor", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->removeAllow("guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->allow("guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->deny("guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_ALLOW, "guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_ALLOW, "guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "guest", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "editor", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_DENY, "editor", 'FrontEnd\Controller\Keep', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "guest", 'FrontEnd\Controller\Calm', "index");
+        //        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_DENY, "guest", 'FrontEnd\Controller\Calm', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "guest", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_ALLOW, "guest", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_ALLOW, "guest", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "editor", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_DENY, "editor", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "admin", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_DENY, "admin", 'FrontEnd\Controller\Try', "index");
+//        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_ALLOW, "editor", 'BackEnd\Controller\Role', "add");
+//        $uniAcl->getACL()->setRule(Acl::OP_ADD, Acl::TYPE_DENY, "editor", 'BackEnd\Controller\Role', "add");
+//        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_DENY, "editor", 'BackEnd\Controller\Role', "add");
+        $uniAcl->getACL()->setRule(Acl::OP_REMOVE, Acl::TYPE_ALLOW, "admin", 'BackEnd\Controller\Role', "add");
 
         /**
          * GET USER FROM SESSION
