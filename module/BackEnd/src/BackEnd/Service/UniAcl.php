@@ -22,7 +22,7 @@ class UniAcl{
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
-    const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER";
+    const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
     const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
     const MAP_USER_SPECIAL = "MAP_USER_SPECIAL";
     const ROLE_CONTROLLER_ACTION = "ROLE_CONTROLLER_ACTION";
@@ -554,5 +554,66 @@ class UniAcl{
             }
         }
         return $aReturn;
+    }
+    public function getMap(){
+        $this->tempConfig = array();
+        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+            if(is_null($inheritRole)){
+                $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
+            }
+        }
+        /*
+         * map for child
+         */
+        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+            if(is_null($inheritRole)){
+            }
+            $arrayDiff = $this->config[self::CONTROLLER_ACTION];
+            if(is_string($inheritRole)){
+                $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
+                    $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$inheritRole]);
+            }
+            if(is_array($inheritRole)){
+                foreach($inheritRole as $s_inheritRole){
+                    $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
+                        $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$s_inheritRole]);
+                }
+            }
+            //            var_dump($arrayDiff);
+            $this->f($arrayDiff, $this->roleControllerActionAcl, $role);
+        }
+        //        $arrayDiff = $this->config[self::CONTROLLER_ACTION];
+        //        $arrayDiff = $this->arrayRecursiveDiff($arrayDiff, $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION]["guest"]);
+        //        var_dump($arrayDiff);
+        //        $this->f($arrayDiff, "editor");
+        //        var_dump($this->tempConfig);
+    }
+
+    public function getWhereOnRole($role){
+        $where = array();
+        $this->buildConfig();
+        var_dump($this->tempConfig);
+        $where[$role] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role];
+        $this->roleArray = array();
+        $this->loopParent($role);
+        foreach($this->roleArray as $parentRole){
+            $where[$parentRole] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$parentRole];
+        }
+
+        return $where;
+    }
+
+    public function getAllOnRole($role){
+        $user = [];
+        $user["role"] = $role;
+        $r = array();
+        foreach($this->config[self::CONTROLLER_ACTION] as $controller => $actionArray){
+            foreach($actionArray as $action){
+                if($this->isUniAllowed($user, $controller, $action)){
+                    $r[$controller][] = $action;
+                }
+            }
+        }
+        return $r;
     }
 }

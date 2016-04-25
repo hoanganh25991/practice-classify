@@ -42,6 +42,7 @@ class RoleController extends AbstractActionController{
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
+        $user["role"] = "admin";
         $userActionOnRole = array();
         foreach($this->roleAction as $action){
             if($uniAcl->isUniAllowed($user, 'BackEnd\Controller\Role', $action)){
@@ -59,8 +60,12 @@ class RoleController extends AbstractActionController{
 //                "controller" => null,
 //            )
 //        ),
+        $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
+//        $view->setVariable("guest", $uniAcl->getWhereOnRole("guest"));
+//        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
         $view->setVariable("uniAclConfig", $uniAclConfig);
         $view->setVariable("userActionOnRole", $userActionOnRole);
+
         return $view;
     }
 
