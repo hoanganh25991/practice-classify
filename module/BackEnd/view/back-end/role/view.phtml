@@ -1,9 +1,4 @@
-﻿<button type="button" class="btn btn-primary" data-container="body" data-toggle="popover" data-placement="bottom"
-        data-content="Vivamus
-sagittis lacus vel augue laoreet rutrum faucibus.">
-    Popover on bottom
-</button>
-<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+﻿<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
 <h3><?php var_dump($this->_vars); ?></h3>
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
@@ -13,7 +8,6 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
 <!-- CONTROLLER !-->
 <div id="controller">CONTROLLER</div>
 <div id="myTreeView"></div>
-<div id="myTreeViewV2"></div>
 
 <div id="f">
     <ul id="role"></ul>
@@ -45,8 +39,8 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
              * READ CONFIG from server
              */
             var uniAclConfig = JSON.parse($("#uniAclConfig").val());
-//            var userActionOnRole = JSON.parse($("#userActionOnRole").val());
-            var userActionOnRole = ["view", "edit", "add", "delete"];
+            var userActionOnRole = JSON.parse($("#userActionOnRole").val());
+//            var userActionOnRole = ["view", "edit", "add", "delete"];
             console.log(uniAclConfig);
             console.log(userActionOnRole);
 
@@ -54,33 +48,14 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
              * VIEW on CONTROLLER
              */
             var controllerAction = uniAclConfig[CONTROLLER_ACTION];
-            console.log(controllerAction);
-//            var controllerDiv = $("#scontroller");
             var auiTreeData = buildTreeData(controllerAction);
+            renderTree(auiTreeData, "#myTreeView");
 
-            YUI().use(
-                'aui-tree-view',
-                function(Y){
-                    var treeView = new Y.TreeView(
-                        {
-                            boundingBox: '#myTreeView',
-                            children: auiTreeData
-                        }
-                    ).render();
-//                    console.log(treeView);
-                }
-            );
             /**
              * load ROLE
              */
             var role = uniAclConfig[ROLE];
             var roleDiv = $("#role");
-//            var lis = $("<li>");
-//            lis.html("f");
-//            console.log(lis);
-//            roleDiv.append(lis);
-//            roleDiv.append(lis.clone());
-//            roleDiv.append(lis.clone());
 
             var sampleRoleRow = $("#sampleRoleRow");
             for(var inheritRole in role){
@@ -94,27 +69,17 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
                 }
             }
 
-//            $(function(){
-//                $('[data-toggle="popover"]').popover({
-//                    html: true,
-//                    content: '<span class="glyphicon glyphicon-cog"></span>'
-//                });
-//            });
-
             /**
              * action user can
              */
             var actionDiv = $("<div>");
             var sampleIcon = $("<span class='glyphicon'></span>");
-            console.log(userActionOnRole);
             for(var key in userActionOnRole){
                 if(userActionOnRole.hasOwnProperty(key)){
                     var action = userActionOnRole[key];
                     var icon = sampleIcon.clone();
-                    console.log(action);
                     switch(action){
                         case "edit":
-                            console.log("edit");
                             icon.addClass("glyphicon-pencil");
                             break;
                         case "add":
@@ -129,7 +94,6 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
                     actionDiv.append(icon);
                 }
             }
-            console.log(actionDiv);
             $(".allowedAction").tooltip({
                 html: true,
                 title: actionDiv
@@ -142,53 +106,8 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
             var mapDiv = $("#mapRoleControllerAction");
             var guest = JSON.parse($("#guest").val());
             var admin = JSON.parse($("#admin").val());
-            console.log(admin);
             var adminTreeData = buildTreeData(admin);
-//            var aauiTreeData = [];
-//            for(var scontroller in admin){
-//                if(admin.hasOwnProperty(scontroller)){
-//                    var sactionData = [];
-//                    aauiTreeData.push({
-//                        children: sactionData,
-//                        expanded: true,
-//                        label: scontroller,
-//                        type: 'task',
-//                        checked: true
-//                    });
-//                    var sactionArray = admin[scontroller];
-//                    console.log(sactionArray);
-//                    for(var si = 0; i < sactionArray.length; si++){
-//                        sactionData.push({
-//                            label: sactionArray[i],
-//                            leaf: true,
-//                            type: 'task',
-//                            checked: true
-//                        })
-//                    }
-//
-//                }
-//            }
-            YUI().use(
-                'aui-tree-view',
-                function(Y){
-                    new Y.TreeView(
-                        {
-                            boundingBox: '#adminControllerAction',
-                            children: adminTreeData
-                        }
-                    ).render();
-                }
-            );
-//            var adminDiv = $("#adminControllerAction");
-//            adminDiv.on("click", "li", function(e){
-//                var treeNode = $(this);
-////                console.log(treeNode);
-////                console.log(treeNode[0]);
-////                console.log(treeNode[0].textContent);
-////                console.log(treeNode[0].innerText);
-////                getInfoFromUnselectedNode(treeNode);
-//                e.stopPropagation();
-//            });
+            renderTree(adminTreeData, "#adminControllerAction");
 
             $("#scan").on("click", function(){
                 var ul = $("#adminControllerAction").children("ul");
@@ -204,6 +123,7 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
         for(var controller in controllerAction){
             if(controllerAction.hasOwnProperty(controller)){
                 var actionData = [];
+                //build each controller as node
                 treeData.push({
                     children: actionData,
                     expanded: true,
@@ -212,7 +132,7 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
                     checked: true
                 });
 
-                //build actionData
+                //build actionData, into controller as child-node
                 var actionArray = controllerAction[controller];
                 for(var i = 0; i < actionArray.length; i++){
                     actionData.push({
@@ -229,17 +149,16 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
 
     function getTreeData(ul, store){
         var liArray = ul.children("li");
+        /** @warn for each not work as expected of recursive*/
         for(var i = 0; i < liArray.length; i++){
             var li = $(liArray[i]);
-//            console.log(li);
             var contentDiv = li.children("div");
             var containerUl = li.children("ul");
             if(contentDiv.hasClass("tree-node-checked")){
                 var label = contentDiv.children(".tree-label").html();
-                console.log(label);
-//                store;
-                var sliArray = containerUl.children("li");
-                if(sliArray.length > 0){
+//                console.log(label);
+                /** @warn handle different on controller|action */
+                if(containerUl.children("li").length > 0){
                     store[label] = [];
                     getTreeData(containerUl, store[label]);
                 }else{
@@ -250,100 +169,11 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
         }
     }
 
-    //    function getxxxDataFromTree(li){
-    //        var isSelected = false;
-    //        /**
-    //         * decide select on un-select
-    //         * if select >>> obmit
-    //         * if un-select >>> record
-    //         * /
-    //         /**
-    //         * click on selected mean un-selected
-    //         */
-    //
-    //        /**
-    //         * click on un-selected mean selected
-    //         */
-    //
-    //        /**
-    //         * click on controller means remove/select on all controller
-    //         */
-    //        var treeNodeContent = li.find(".tree-node-content");
-    ////        console.log(treeNodeContent);
-    //        console.log(treeNodeContent);
-    //        console.log(treeNodeContent.hasClass(".tree-node-checked"));
-    //        if(treeNodeContent.hasClass(".tree-node-checked")){
-    //            isSelected = true;
-    //        }
-    //        if(!isSelected){
-    //            console.log("handle");
-    //            //NOT isSelected, apply deny on this
-    //            var treeContainer = li.find(".tree-container");
-    //            var isController = false;
-    //            if(treeContainer.length > 0){
-    //                isController = true;
-    //            }
-    //
-    //            /**
-    //             * handle on controller different on action
-    //             */
-    //            return;
-    //        }
-    //        console.log("not handle");
-    //    }
-
-    //    function getDataFromTree(treeContainer){
-    //        var treeData = [];
-    //        var ul = treeContainer.children("ul:first-child");
-    ////        console.log(ul);
-    //        /**
-    //         * loop through li as controller
-    //         * only get li, which is selected
-    //         */
-    ////        getInfoFromLi(ul.children("li:first-child"));
-    ////        var liArray = ul.find("li");
-    ////        console.log(liArray);
-    //        ul.find("li").each(function(){
-    //            var li = $(this);
-    //            var infoLi = getInfoFromLi(li);
-    //            //go ahead when infoLi is checked
-    //            if(infoLi){
-    //                /**
-    //                 * add controller
-    //                 * @type {Array}
-    //                 */
-    //                /**
-    //                 * action
-    //                 */
-    //                var actionArray = [];
-    //                treeData[infoLi.label] = actionArray;
-    //                infoLi.ul.find("li").each(function(){
-    //                    var li = $(this);
-    //                    var infoLi = getInfoFromLi(li);
-    //                    if(infoLi){
-    //                        actionArray.push(infoLi.label);
-    //                    }
-    //                });
-    //            }
-    //        });
-    //        console.log(treeData);
-    //        return treeData;
-    //    }
-    //
-    //    function getInfoFromLi(li){
-    //        var content = li.children("div");
-    //        if(content.hasClass("tree-node-checked")){
-    //            console.log(content);
-    //            var container = li.children("ul");
-    ////        console.log(container);
-    //            var label = content.children(".tree-label").html();
-    ////        console.log(label);
-    //            return {
-    //                label: label,
-    //                ul: container
-    //            };
-    //        }
-    //        return false;
-    //    }
+    function renderTree(treeData, containerDivId){
+        YUI().use('aui-tree-view', function(Y){
+                new Y.TreeView({boundingBox: containerDivId, children: treeData}).render();
+            }
+        );
+    }
 </script>
 
