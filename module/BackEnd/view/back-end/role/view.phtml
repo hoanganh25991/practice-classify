@@ -179,20 +179,20 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
                     ).render();
                 }
             );
-            var adminDiv = $("#adminControllerAction");
-            adminDiv.on("click", "li", function(e){
-                var treeNode = $(this);
-//                console.log(treeNode);
-//                console.log(treeNode[0]);
-//                console.log(treeNode[0].textContent);
-//                console.log(treeNode[0].innerText);
-                getInfoFromUnselectedNode(treeNode);
-                e.stopPropagation();
-            });
+//            var adminDiv = $("#adminControllerAction");
+//            adminDiv.on("click", "li", function(e){
+//                var treeNode = $(this);
+////                console.log(treeNode);
+////                console.log(treeNode[0]);
+////                console.log(treeNode[0].textContent);
+////                console.log(treeNode[0].innerText);
+////                getInfoFromUnselectedNode(treeNode);
+//                e.stopPropagation();
+//            });
 
             $("#scan").on("click", function(){
                 var ul = $("#adminControllerAction").children("ul");
-                var treeData = [];
+                var treeData = {};
                 getTreeData(ul, treeData);
                 console.log(treeData);
             });
@@ -237,23 +237,15 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
             if(contentDiv.hasClass("tree-node-checked")){
                 var label = contentDiv.children(".tree-label").html();
                 console.log(label);
-                if(containerUl.length > 0){
-////                    var a = {};
-////                    a[label] = [];
-////                    console.log(a);
-////                    store.push(a);
-//                    store[label] = [];
-////                    console.log(store);
-//                    console.log("controller");
-//                    console.log(store);
-//                    console.log(label);
-                    getTreeData(containerUl, store);
+//                store;
+                var sliArray = containerUl.children("li");
+                if(sliArray.length > 0){
+                    store[label] = [];
+                    getTreeData(containerUl, store[label]);
                 }else{
-//                    console.log("action");
-//                    store.push(label);
-//                    console.log(store);
-                    return
+                    store.push(label);
                 }
+
             }
         }
     }
