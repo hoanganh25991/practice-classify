@@ -94,7 +94,7 @@ class Module{
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-        $user["role"] = "guest";
+        $user["role"] = "admin";
 
         /*
          *

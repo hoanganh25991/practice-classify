@@ -1,9 +1,11 @@
-﻿<h3><?php var_dump($this->_vars); ?></h3>
+﻿<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+<h3><?php var_dump($this->_vars); ?></h3>
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
 <!-- CONTROLLER !-->
-
 <div id="controller">CONTROLLER</div>
+<div id="myTreeView"></div>
+<div id="myTreeViewV2"></div>
 <script>
     (function($){
         $(document).ready(function(){
@@ -21,22 +23,39 @@
              */
             var controllerAction = uniAclConfig[CONTROLLER_ACTION];
             console.log(controllerAction);
-            var controllerDiv = $("#controller");
+//            var controllerDiv = $("#controller");
+            var auiTreeData = [];
             for(var controller in controllerAction){
                 if(controllerAction.hasOwnProperty(controller)){
-
-                    console.log(controller, controllerAction[controller]);
+                    var actionData = [];
+                    auiTreeData.push({
+                        children: actionData, expanded: true,
+                        label: controller,
+                        type: 'task'
+                    });
                     var actionArray = controllerAction[controller];
                     for(var i = 0; i < actionArray.length; i++){
-                        var checkBox = $("<input type='checkbox'>");
-                        checkBox.attr(name, controller + '[]');
-                        var value = actionArray[i];
-                        checkBox.attr(value, value);
-                        controllerDiv.append(checkBox);
+                        actionData.push({
+                            label: actionArray[i],
+                            leaf: true,
+                            type: 'task'
+                        })
                     }
 
                 }
             }
+            YUI().use(
+                'aui-tree-view',
+                function(Y){
+                    new Y.TreeView(
+                        {
+                            boundingBox: '#myTreeView',
+                            children: auiTreeData
+                        }
+                    ).render();
+                }
+            );
+
         });
     })(jQuery);
 </script>
