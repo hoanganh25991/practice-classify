@@ -2,16 +2,14 @@
 <h3><?php var_dump($this->_vars); ?></h3>
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
-<input type="hidden" id="guest" value='<?php echo json_encode($this->guest); ?>'>
-<input type="hidden" id="admin" value='<?php echo json_encode($this->admin); ?>'>
-<input type="hidden" id="editor" value='<?php echo json_encode($this->editor); ?>'>
+<input type="hidden" id="inheritRole" value='<?php echo json_encode($this->inheritRole); ?>'>
+<input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
+<input type="hidden" id="allControllerAction" value='<?php echo json_encode($this->allControllerAction); ?>'>
+<input type="hidden" id="mapRoleWhere" value='<?php echo json_encode($this->mapRoleWhere); ?>'>
 <!-- CONTROLLER !-->
 <div id="controller">CONTROLLER</div>
 <div id="myTreeView"></div>
 
-<div id="f">
-    <ul id="role"></ul>
-</div>
 <li id="sampleRoleRow" style="display: none;">
     <input type="text" readonly name="inheritRole">
     <input type="text" readonly name="parentRole">
@@ -34,7 +32,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span class="glyphicon glyphicon-folder-close">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span
+                                    class="glyphicon glyphicon-folder-close">
                             </span>Content</a>
                         </h4>
                     </div>
@@ -43,22 +42,26 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-pencil text-primary"></span><a href="http://www.jquery2dotnet.com">Articles</a>
+                                        <span class="glyphicon glyphicon-pencil text-primary"></span><a
+                                            href="http://www.jquery2dotnet.com">Articles</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-flash text-success"></span><a href="http://www.jquery2dotnet.com">News</a>
+                                        <span class="glyphicon glyphicon-flash text-success"></span><a
+                                            href="http://www.jquery2dotnet.com">News</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-file text-info"></span><a href="http://www.jquery2dotnet.com">Newsletters</a>
+                                        <span class="glyphicon glyphicon-file text-info"></span><a
+                                            href="http://www.jquery2dotnet.com">Newsletters</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-comment text-success"></span><a href="http://www.jquery2dotnet.com">Comments</a>
+                                        <span class="glyphicon glyphicon-comment text-success"></span><a
+                                            href="http://www.jquery2dotnet.com">Comments</a>
                                         <span class="badge">42</span>
                                     </td>
                                 </tr>
@@ -69,7 +72,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><span class="glyphicon glyphicon-th">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><span
+                                    class="glyphicon glyphicon-th">
                             </span>Modules</a>
                         </h4>
                     </div>
@@ -78,7 +82,8 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <a href="http://www.jquery2dotnet.com">Orders</a> <span class="label label-success">$ 320</span>
+                                        <a href="http://www.jquery2dotnet.com">Orders</a> <span
+                                            class="label label-success">$ 320</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -103,7 +108,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span class="glyphicon glyphicon-user">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span
+                                    class="glyphicon glyphicon-user">
                             </span>Account</a>
                         </h4>
                     </div>
@@ -117,7 +123,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <a href="http://www.jquery2dotnet.com">Notifications</a> <span class="label label-info">5</span>
+                                        <a href="http://www.jquery2dotnet.com">Notifications</a> <span
+                                            class="label label-info">5</span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -127,7 +134,8 @@
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-trash text-danger"></span><a href="http://www.jquery2dotnet.com" class="text-danger">
+                                        <span class="glyphicon glyphicon-trash text-danger"></span><a
+                                            href="http://www.jquery2dotnet.com" class="text-danger">
                                             Delete Account</a>
                                     </td>
                                 </tr>
@@ -138,7 +146,8 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span class="glyphicon glyphicon-file">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span
+                                    class="glyphicon glyphicon-file">
                             </span>Reports</a>
                         </h4>
                     </div>
@@ -147,22 +156,26 @@
                             <table class="table">
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a href="http://www.jquery2dotnet.com">Sales</a>
+                                        <span class="glyphicon glyphicon-usd"></span><a
+                                            href="http://www.jquery2dotnet.com">Sales</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-user"></span><a href="http://www.jquery2dotnet.com">Customers</a>
+                                        <span class="glyphicon glyphicon-user"></span><a
+                                            href="http://www.jquery2dotnet.com">Customers</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a href="http://www.jquery2dotnet.com">Products</a>
+                                        <span class="glyphicon glyphicon-tasks"></span><a
+                                            href="http://www.jquery2dotnet.com">Products</a>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <span class="glyphicon glyphicon-shopping-cart"></span><a href="http://www.jquery2dotnet.com">Shopping Cart</a>
+                                        <span class="glyphicon glyphicon-shopping-cart"></span><a
+                                            href="http://www.jquery2dotnet.com">Shopping Cart</a>
                                     </td>
                                 </tr>
                             </table>
@@ -189,28 +202,50 @@
                 </div>
                 <div id="rolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <p>hien thi thong tin ve role-inherit</p>
+                        <p>hien thi thong tin ve inherit-role</p>
+                        <div id="inheritRoleShow"></div>
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#mapPanelBody">map role controller action</div>
+                    <div class="panel-title" data-toggle="collapse" href="#mapPanelBody">map role where</div>
                 </div>
                 <div id="mapPanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
                         <p>common</p>
                         <p>special (no inherit)</p>
+                        <div id="mapRoleWhereShow">
+                            <div id="selectContainer"></div>
+                            <h3>INHERIT</h3>
+                            <div id="mapRoleWhereInherit"></div>
+                            <h3>NOT INHERIT</h3>
+                            <div id="mapRoleWhereNotInherit"></div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#controllerActionPanelBody">controller action</div>
+                    <div class="panel-title" data-toggle="collapse" href="#allRolePanelBody">all roles</div>
+                </div>
+                <div id="allRolePanelBody" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <p>hien thi tat cac role</p>
+                        <div id="allRolesShow"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="panel-title" data-toggle="collapse" href="#controllerActionPanelBody">controller
+                        action
+                    </div>
                 </div>
                 <div id="controllerActionPanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <p>hien thi tat cac module</p>
+                        <p>hien thi tat cac controller action</p>
+                        <div id="allControllerActionShow"></div>
                     </div>
                 </div>
             </div>
@@ -224,11 +259,16 @@
         $(document).ready(function(){
             const CONTROLLER_ACTION = "CONTROLLER_ACTION";
             const ROLE = "ROLE";
+            const INHERIT = "INHERIT";
+            const NOT_INHERIT = "NOT_INHERIT";
             /**
              * READ CONFIG from server
              */
             var uniAclConfig = JSON.parse($("#uniAclConfig").val());
             var userActionOnRole = JSON.parse($("#userActionOnRole").val());
+
+            var allRoles = JSON.parse($("#allRoles").val());
+
 //            var userActionOnRole = ["view", "edit", "add", "delete"];
             console.log(uniAclConfig);
             console.log(userActionOnRole);
@@ -237,67 +277,60 @@
              * VIEW on CONTROLLER
              */
             var controllerAction = uniAclConfig[CONTROLLER_ACTION];
-            var auiTreeData = buildTreeData(controllerAction);
-            renderTree(auiTreeData, "#myTreeView");
+//            var auiTreeData = buildTreeData(controllerAction);
+            renderTree(controllerAction, "#myTreeView");
 
-            /**
-             * load ROLE
-             */
-            var role = uniAclConfig[ROLE];
-            var roleDiv = $("#role");
 
-            var sampleRoleRow = $("#sampleRoleRow");
-            for(var inheritRole in role){
-                if(role.hasOwnProperty(inheritRole)){
-                    var row = sampleRoleRow.clone();
-                    row.css({display: 'block'});
-                    row.find("input[name='inheritRole']").val(inheritRole);
-                    row.find("input[name='parentRole']").val(role[inheritRole]);
-
-                    roleDiv.append(row);
-                }
-            }
-
-            /**
-             * action user can
-             */
-            var actionDiv = $("<div>");
-            var sampleIcon = $("<span class='glyphicon'></span>");
-            for(var key in userActionOnRole){
-                if(userActionOnRole.hasOwnProperty(key)){
-                    var action = userActionOnRole[key];
-                    var icon = sampleIcon.clone();
-                    switch(action){
-                        case "edit":
-                            icon.addClass("glyphicon-pencil");
-                            break;
-                        case "add":
-                            icon.addClass("glyphicon-plus");
-                            break;
-                        case "delete":
-                            icon.addClass("glyphicon-trash");
-                            break;
-                        default:
-                            break;
-                    }
-                    actionDiv.append(icon);
-                }
-            }
-            $(".allowedAction").tooltip({
-                html: true,
-                title: actionDiv
-            });
             /**
              * map role scontroller
              */
             const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
 //            var mapRoleController = uniAclConfig[MAP_ROLE_CONTROLLER_ACTION];
-            var mapDiv = $("#mapRoleControllerAction");
-            var guest = JSON.parse($("#guest").val());
-            var admin = JSON.parse($("#admin").val());
-            var adminTreeData = buildTreeData(admin);
-            renderTree(adminTreeData, "#adminControllerAction");
+//            var mapDiv = $("#mapRoleControllerAction");
+//            var guest = JSON.parse($("#guest").val());
+//            var admin = JSON.parse($("#admin").val());
+//            var adminTreeData = buildTreeData(admin);
+//            renderTree(adminTreeData, "#adminControllerAction");
 
+            /**
+             * load ROLE
+             */
+            var inheritRole = JSON.parse($("#inheritRole").val());
+            renderInheritRole(inheritRole, $("#inheritRoleShow"));
+
+            /**
+             * map ROLE WHERE
+             */
+//            var allRoles = JSON.parse($("#allRoles").val());
+            var mapRoleWhere = JSON.parse($("#mapRoleWhere").val());
+//            console.log(mapRoleWhere);
+            var selectContainer = $("#selectContainer");
+            renderAllRoles(allRoles, selectContainer);
+            //bind event on select
+            selectContainer.children("select").on("change", function(){
+                var optionSelected = $(this).children("option:selected");
+                var role = optionSelected.val();
+                console.log(role);
+                var s = buildTreeData(mapRoleWhere[role][INHERIT]);
+                console.log(s);
+                //clean div container treeview
+                $("#mapRoleWhereInherit").empty();
+                $("#mapRoleWhereNotInherit").empty();
+                renderTree(mapRoleWhere[role][INHERIT], "#mapRoleWhereInherit");
+                renderTree(mapRoleWhere[role][NOT_INHERIT], "#mapRoleWhereNotInherit");
+            });
+            /**
+             * ALL ROLES
+             */
+            /** @warn allRoles at first line */
+            renderAllRoles(allRoles, $("#allRolesShow"));
+
+            /**
+             * ALL CONTROLLER ACTION
+             */
+            var allControllerAction = JSON.parse($("#allControllerAction").val());
+//            console.log(allControllerAction);
+            renderTree(allControllerAction, "#allControllerActionShow");
             $("#scan").on("click", function(){
                 var ul = $("#adminControllerAction").children("ul");
                 var treeData = {};
@@ -358,11 +391,90 @@
         }
     }
 
-    function renderTree(treeData, containerDivId){
+    function renderTree(controllerAction, containerDivId){
+        var treeData = buildTreeData(controllerAction);
         YUI().use('aui-tree-view', function(Y){
                 new Y.TreeView({boundingBox: containerDivId, children: treeData}).render();
             }
         );
+    }
+
+    function renderInheritRole(inheritRole, containerDiv){
+        var sampleRoleRow = $("#sampleRoleRow");
+        for(var inherit in inheritRole){
+            if(inheritRole.hasOwnProperty(inherit)){
+                var row = sampleRoleRow.clone();
+                row.css({display: 'block'});
+                row.find("input[name='inheritRole']").val(inherit);
+                row.find("input[name='parentRole']").val(inheritRole[inherit]);
+                containerDiv.append(row);
+            }
+        }
+    }
+    //    function init(){
+    //        var title = actionDiv();
+    //        $('[data-toggle="tooltip"]').tooltip({
+    //            html: true
+    //            title: title
+    //        });
+    //    }
+
+    //    function actionDiv(userActionRole){
+    //        /**
+    //         * action user can
+    //         */
+    //        var actionDiv = $("<div>");
+    //        var sampleIcon = $("<span class='glyphicon'></span>");
+    //        for(var key in userActionOnRole){
+    //            if(userActionOnRole.hasOwnProperty(key)){
+    //                var action = userActionOnRole[key];
+    //                var icon = sampleIcon.clone();
+    //                switch(action){
+    //                    case "edit":
+    //                        icon.addClass("glyphicon-pencil");
+    //                        break;
+    //                    case "add":
+    //                        icon.addClass("glyphicon-plus");
+    //                        break;
+    //                    case "delete":
+    //                        icon.addClass("glyphicon-trash");
+    //                        break;
+    //                    default:
+    //                        break;
+    //                }
+    //                actionDiv.append(icon);
+    //            }
+    //        }
+    //        return actionDiv;
+    //    }
+
+    function renderAllRoles(allRoles, containerDiv){
+//            <select class="selectpicker">
+//                <option>Mustard</option>
+//                <option>Ketchup</option>
+//                <option>Relish</option>
+//            </select>
+        var select = $('<select class="selectpicker">');
+        var optionSample = $("<option>");
+        //when loop for i++, means key just number
+        //sometimes key in array like php has info
+        //for(var key in array){ do sth}
+        for(var i = 0; i < allRoles.length; i++){
+            var option = optionSample.clone();
+            option.html(allRoles[i]);
+            select.append(option);
+        }
+        containerDiv.append(select);
+    }
+
+    function renderRoleWhere(){
+        /**
+         * CONTROLLER ACTION
+         */
+
+        /**
+         * SPECIAL, not inherit
+         */
     }
 </script>
 

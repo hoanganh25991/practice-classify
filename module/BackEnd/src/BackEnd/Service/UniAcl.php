@@ -18,7 +18,7 @@ use Zend\Permissions\Acl\Acl;
  */
 class UniAcl{
     const CONFIG = "UNI_ACL_CONFIG";
-    const ROLE = "ROLE";
+    const ROLE_INHERIT = "ROLE_INHERIT";
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
@@ -28,6 +28,9 @@ class UniAcl{
     const ROLE_CONTROLLER_ACTION = "ROLE_CONTROLLER_ACTION";
     const ROLE_SPECIAL = "ROLE_SPECIAL";
     const USER_SPECIAL = "USER_SPECIAL";
+
+    const INHERIT = "INHERIT";
+    const NOT_INHERIT = "NOT_INHERIT";
     /** @var  array */
     protected $config;
     protected $roleControllerActionAcl;
@@ -97,8 +100,8 @@ class UniAcl{
                 "admin" => "editor"
             ),
          */
-        if(isset($this->config[self::ROLE])){
-            foreach($this->config[self::ROLE] as $role => $inherit){
+        if(isset($this->config[self::ROLE_INHERIT])){
+            foreach($this->config[self::ROLE_INHERIT] as $role => $inherit){
                 var_dump($role, $inherit);
                 $this->roleControllerActionAcl->addRole($role, $inherit);
             }
@@ -186,7 +189,7 @@ class UniAcl{
          * add default role, "admin", "guest"
          * allow "admin" on ALL controller, action
          */
-        if(!isset($this->config[self::ROLE])){
+        if(!isset($this->config[self::ROLE_INHERIT])){
             $this->roleControllerActionAcl->addRole("admin");
             $this->roleControllerActionAcl->allow("admin", null, null);
         }
@@ -237,7 +240,7 @@ class UniAcl{
          * get role which this role inherit
          */
         /** @var array|string|null $inherit */
-        $inherit = $this->config[self::ROLE][$role];
+        $inherit = $this->config[self::ROLE_INHERIT][$role];
 
         if(is_null($inherit)){
             return;
@@ -321,14 +324,14 @@ class UniAcl{
          * config has NO ROLE
          */
         //add role for user
-        if(!isset($this->config[self::ROLE])){
+        if(!isset($this->config[self::ROLE_INHERIT])){
             $user["role"] = "admin";
         }
         /**
          * config has ROLE
          * unlogged|logged user without role, is "guest"
          */
-        if(isset($this->config[self::ROLE])){
+        if(isset($this->config[self::ROLE_INHERIT])){
             if(!isset($user["role"])){
                 $user["role"] = "guest";
             }
@@ -435,7 +438,7 @@ class UniAcl{
             if(count($this->roleArray) === 0){
                 $this->roleArray = null;
             }
-            $this->tempConfig[self::ROLE][$role] = $this->roleArray;
+            $this->tempConfig[self::ROLE_INHERIT][$role] = $this->roleArray;
         }
         //        var_dump($tempConfig);
         /**
@@ -444,7 +447,7 @@ class UniAcl{
         /*
          * map role for f1 parent, who not inherit from anyone
          */
-        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
             if(is_null($inheritRole)){
                 $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
             }
@@ -452,7 +455,7 @@ class UniAcl{
         /*
          * map for child
          */
-        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
             if(is_null($inheritRole)){
             }
             $arrayDiff = $this->config[self::CONTROLLER_ACTION];
@@ -466,14 +469,14 @@ class UniAcl{
                         $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$s_inheritRole]);
                 }
             }
-//            var_dump($arrayDiff);
+            //            var_dump($arrayDiff);
             $this->f($arrayDiff, $this->roleControllerActionAcl, $role);
         }
         //        $arrayDiff = $this->config[self::CONTROLLER_ACTION];
         //        $arrayDiff = $this->arrayRecursiveDiff($arrayDiff, $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION]["guest"]);
         //        var_dump($arrayDiff);
         //        $this->f($arrayDiff, "editor");
-//        var_dump($this->tempConfig);
+        //        var_dump($this->tempConfig);
 
         /**
          * map ROLE SPECIAL
@@ -555,9 +558,10 @@ class UniAcl{
         }
         return $aReturn;
     }
+
     public function getMap(){
         $this->tempConfig = array();
-        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
             if(is_null($inheritRole)){
                 $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
             }
@@ -565,7 +569,7 @@ class UniAcl{
         /*
          * map for child
          */
-        foreach($this->tempConfig[self::ROLE] as $role => $inheritRole){
+        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
             if(is_null($inheritRole)){
             }
             $arrayDiff = $this->config[self::CONTROLLER_ACTION];
@@ -589,19 +593,19 @@ class UniAcl{
         //        var_dump($this->tempConfig);
     }
 
-    public function getWhereOnRole($role){
-        $where = array();
-        $this->buildConfig();
-        var_dump($this->tempConfig);
-        $where[$role] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role];
-        $this->roleArray = array();
-        $this->loopParent($role);
-        foreach($this->roleArray as $parentRole){
-            $where[$parentRole] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$parentRole];
-        }
-
-        return $where;
-    }
+//    public function getWhereOnRole($role){
+//        $where = array();
+//        $this->buildConfig();
+//        var_dump($this->tempConfig);
+//        $where[$role] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role];
+//        $this->roleArray = array();
+//        $this->loopParent($role);
+//        foreach($this->roleArray as $parentRole){
+//            $where[$parentRole] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$parentRole];
+//        }
+//
+//        return $where;
+//    }
 
     public function getAllOnRole($role){
         $user = [];
@@ -615,5 +619,45 @@ class UniAcl{
             }
         }
         return $r;
+    }
+
+    public function getAllRoles(){
+        return $this->roleControllerActionAcl->getRoles();
+    }
+
+    public function getAllControllerAction(){
+        return $this->roleControllerActionAcl->getResources();
+    }
+
+    public function getRoleWhere(){
+        $result = array();
+        /** @warn $allRoles is used many time, save as global */
+        $allRoles = $this->roleControllerActionAcl->getRoles();
+        foreach($allRoles as $role){
+            $inheritWhere = array();
+            $notInheritWhere = array();
+            foreach($this->config[self::CONTROLLER_ACTION] as $controller => $actionArray){
+                foreach($actionArray as $action){
+                    /**
+                     * ROLE on CONTROLLER ACTION
+                     */
+                    if($this->roleControllerActionAcl->isAllowed($role, $controller, $action)){
+                        $inheritWhere[$controller][] = $action;
+                    }
+                    /**
+                     * ROLE on SPECIAL
+                     */
+                    if($this->roleSpecialAcl->hasRole($role)){
+                        if($this->roleSpecialAcl->isAllowed($role, $controller, $action)){
+                            $notInheritWhere[$controller][] = $action;
+                        }
+                    }
+                }
+
+            }
+            $result[$role][self::INHERIT] = $inheritWhere;
+            $result[$role][self::NOT_INHERIT] = $notInheritWhere;
+        }
+        return $result;
     }
 }

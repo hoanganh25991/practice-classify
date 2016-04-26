@@ -1,6 +1,6 @@
 <?php
 \BackEnd\Service\UniAcl::CONFIG => array(
-        \BackEnd\Service\UniAcl::ROLE => array(
+        \BackEnd\Service\UniAcl::ROLE_INHERIT => array(
             'guest' => null,
             'editor' => 'guest',
             'admin' => 'editor',

@@ -65,7 +65,10 @@ class RoleController extends AbstractActionController{
 //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
         $view->setVariable("uniAclConfig", $uniAclConfig);
         $view->setVariable("userActionOnRole", $userActionOnRole);
-
+        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::ROLE_INHERIT]);
+        $view->setVariable("allRoles", $uniAcl->getAllRoles());
+        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
+        $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
         return $view;
     }
 
