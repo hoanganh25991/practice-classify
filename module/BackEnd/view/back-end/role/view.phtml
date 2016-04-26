@@ -6,9 +6,6 @@
 <input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
 <input type="hidden" id="allControllerAction" value='<?php echo json_encode($this->allControllerAction); ?>'>
 <input type="hidden" id="mapRoleWhere" value='<?php echo json_encode($this->mapRoleWhere); ?>'>
-<!-- CONTROLLER !-->
-<div id="controller">CONTROLLER</div>
-<div id="myTreeView"></div>
 
 <li id="sampleRoleRow" style="display: none;">
     <input type="text" readonly name="inheritRole">
@@ -18,187 +15,12 @@
     </button>
 </li>
 
-<div id="mapRoleControllerAction">
-    <h2>map role controller action</h2>
-    <div id="adminControllerAction"></div>
-</div>
-
-<button id="scan" class="btn btn-primary">scan</button>
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-3 col-md-3">
-            <div class="panel-group" id="accordion">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"><span
-                                    class="glyphicon glyphicon-folder-close">
-                            </span>Content</a>
-                        </h4>
-                    </div>
-                    <div id="collapseOne" class="panel-collapse collapse in">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-pencil text-primary"></span><a
-                                            href="http://www.jquery2dotnet.com">Articles</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-flash text-success"></span><a
-                                            href="http://www.jquery2dotnet.com">News</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-file text-info"></span><a
-                                            href="http://www.jquery2dotnet.com">Newsletters</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-comment text-success"></span><a
-                                            href="http://www.jquery2dotnet.com">Comments</a>
-                                        <span class="badge">42</span>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"><span
-                                    class="glyphicon glyphicon-th">
-                            </span>Modules</a>
-                        </h4>
-                    </div>
-                    <div id="collapseTwo" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Orders</a> <span
-                                            class="label label-success">$ 320</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Invoices</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Shipments</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Tex</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree"><span
-                                    class="glyphicon glyphicon-user">
-                            </span>Account</a>
-                        </h4>
-                    </div>
-                    <div id="collapseThree" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Change Password</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Notifications</a> <span
-                                            class="label label-info">5</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <a href="http://www.jquery2dotnet.com">Import/Export</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-trash text-danger"></span><a
-                                            href="http://www.jquery2dotnet.com" class="text-danger">
-                                            Delete Account</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour"><span
-                                    class="glyphicon glyphicon-file">
-                            </span>Reports</a>
-                        </h4>
-                    </div>
-                    <div id="collapseFour" class="panel-collapse collapse">
-                        <div class="panel-body">
-                            <table class="table">
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-usd"></span><a
-                                            href="http://www.jquery2dotnet.com">Sales</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-user"></span><a
-                                            href="http://www.jquery2dotnet.com">Customers</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-tasks"></span><a
-                                            href="http://www.jquery2dotnet.com">Products</a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="glyphicon glyphicon-shopping-cart"></span><a
-                                            href="http://www.jquery2dotnet.com">Shopping Cart</a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-9 col-md-9">
-            <div class="well">
-                <h1>
-                    Accordion Menu With Icon</h1>
-                Admin Dashboard Accordion Menu
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row">
     <div class="col-md-8">
-        <div class="panel-group">
+        <div class="panel-group" id="panelParent">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#rolePanelBody">role</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">role</div>
                 </div>
                 <div id="rolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -209,7 +31,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#mapPanelBody">map role where</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map role where</div>
                 </div>
                 <div id="mapPanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -227,7 +49,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#allRolePanelBody">all roles</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">all roles</div>
                 </div>
                 <div id="allRolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -238,7 +60,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-toggle="collapse" href="#controllerActionPanelBody">controller
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#controllerActionPanelBody">controller
                         action
                     </div>
                 </div>
@@ -268,42 +90,15 @@
             var userActionOnRole = JSON.parse($("#userActionOnRole").val());
 
             var allRoles = JSON.parse($("#allRoles").val());
-
-//            var userActionOnRole = ["view", "edit", "add", "delete"];
-            console.log(uniAclConfig);
-            console.log(userActionOnRole);
-
-            /**
-             * VIEW on CONTROLLER
-             */
-            var controllerAction = uniAclConfig[CONTROLLER_ACTION];
-//            var auiTreeData = buildTreeData(controllerAction);
-            renderTree(controllerAction, "#myTreeView");
-
-
-            /**
-             * map role scontroller
-             */
-            const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
-//            var mapRoleController = uniAclConfig[MAP_ROLE_CONTROLLER_ACTION];
-//            var mapDiv = $("#mapRoleControllerAction");
-//            var guest = JSON.parse($("#guest").val());
-//            var admin = JSON.parse($("#admin").val());
-//            var adminTreeData = buildTreeData(admin);
-//            renderTree(adminTreeData, "#adminControllerAction");
-
             /**
              * load ROLE
              */
             var inheritRole = JSON.parse($("#inheritRole").val());
             renderInheritRole(inheritRole, $("#inheritRoleShow"));
-
             /**
              * map ROLE WHERE
              */
-//            var allRoles = JSON.parse($("#allRoles").val());
             var mapRoleWhere = JSON.parse($("#mapRoleWhere").val());
-//            console.log(mapRoleWhere);
             var selectContainer = $("#selectContainer");
             renderAllRoles(allRoles, selectContainer);
             //bind event on select
@@ -324,7 +119,6 @@
              */
             /** @warn allRoles at first line */
             renderAllRoles(allRoles, $("#allRolesShow"));
-
             /**
              * ALL CONTROLLER ACTION
              */
