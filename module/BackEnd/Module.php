@@ -74,6 +74,7 @@ class Module{
             $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
             $tempConfig = $config[UniAcl::CONFIG];
             $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
+            $uniAclConfig = $tempConfig;
             $cache->setArrayItem(UniAcl::CONFIG, $tempConfig);
         }
         /**

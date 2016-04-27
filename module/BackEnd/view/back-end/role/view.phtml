@@ -96,9 +96,9 @@
             /**
              * READ CONFIG from server
              */
-            console.log($("#uniAclConfig").val());
-            var uniAclConfig = JSON.parse($("#uniAclConfig").val());
-            console.log(uniAclConfig);
+//            console.log($("#uniAclConfig").val());
+//            var uniAclConfig = JSON.parse($("#uniAclConfig").val());
+//            console.log(uniAclConfig);
             var userActionOnRole = JSON.parse($("#userActionOnRole").val());
 
             var allRoles = JSON.parse($("#allRoles").val());
@@ -169,7 +169,7 @@
                 formData.append("userAction", "edit");
                 formData.append("data", resultJsonString);
                 var oReq = new XMLHttpRequest();
-                var url = "/admin/role";
+                var url = "/admin/role/edit";
                 oReq.open("post", url);
                 oReq.send(formData);
                 oReq.onload = function(e){
@@ -179,7 +179,7 @@
 //                    console.log(resJsonObj);
 //                    console.log(resJsonObj.info);
 //                    var data = JSON.parse(resJsonObj.info);
-//                    console.log(data);
+                    console.log(resJsonObj);
                 };
             });
         });

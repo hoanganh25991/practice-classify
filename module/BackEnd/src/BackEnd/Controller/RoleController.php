@@ -100,6 +100,43 @@ class RoleController extends AbstractActionController{
 
 
     public function editAction(){
+        /** @var Request $request */
+
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $postParam = $request->getPost();
+            $userAction = $postParam->get("userAction");
+            $data = $postParam->get("data");
+            $dataObj = json_decode($data);
+
+            /**
+             * CALL UNIACL for help
+             * this uni acl help to config change
+             */
+            /** @warn init uniacl in different place */
+            /** @var UniCache $cache */
+            $cache = $this->serviceManager->get("UniCache");
+            $uniAclConfig = $cache->getArrayItem(UniAcl::CONFIG);
+            $uniAcl = new UniAcl($uniAclConfig);
+            $uniAcl->init();
+//            $role = $dataObj->role;
+//            $a = $role;
+//            $inherit = $dataObj["inherit"];
+//            $notInherit = $dataObj["notInherit"];
+            $uniAcl->updateRoleControllerAction($dataObj->role, $dataObj->inherit);
+            $uniAcl->updateRoleSpecial($dataObj->role, $dataObj->notInherit);
+//            $newConfig = $uniAcl->buildConfig();
+//            $cache->setArrayItem(UniAcl::CONFIG, $newConfig);
+            /**
+             * HANDLE data, ask some one for help
+             */
+
+
+            //            var_dump($data, $userAction);
+            $view = new JsonModel();
+            $view->setVariable("info", "server day");
+            return $view;
+        }
         $variables = array();
         $variables["controller"] = 'BackEnd\Controller\UserController\editAction';
         $view = new ViewModel($variables);

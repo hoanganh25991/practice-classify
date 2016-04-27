@@ -19,7 +19,7 @@ use Zend\Permissions\Acl\Acl;
  */
 class UniAcl{
     const CONFIG = "UNI_ACL_CONFIG";
-    const MAP_ROLE_PARENT = "ROLE_INHERIT";
+    const MAP_ROLE_PARENT = "ROLE_PARENT";
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
@@ -155,20 +155,45 @@ class UniAcl{
         //1. add ROLE
         //user email as role in USER SPECIAL
         //add role base on map USER SPECIAL
-        if(isset($this->config[self::MAP_USER_SPECIAL])){
-            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
-            foreach($mapUserSpecial as $role){
-                $this->userSpecialAcl->addRole($role);
-            }
-        }
+        //        if(isset($this->config[self::MAP_USER_SPECIAL])){
+        //            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
+        //            foreach($mapUserSpecial as $role){
+        //                $this->userSpecialAcl->addRole($role);
+        //            }
+        //        }
         //2. add CONTROLLER
         //note: USER SPECIAL share same CONTROLLER
         $this->loadController($this->userSpecialAcl);
         //3. map USER CONTROLLER
+        //        if(isset($this->config[self::MAP_USER_SPECIAL])){
+        //            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
+        //            $this->allow($mapUserSpecial, $this->userSpecialAcl);
+        //        }
         if(isset($this->config[self::MAP_USER_SPECIAL])){
-            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
-            $this->allow($mapUserSpecial, $this->userSpecialAcl);
+            foreach($this->config[self::MAP_USER_SPECIAL] as $role => $controllerAction){
+                foreach($controllerAction as $controller => $action){
+                    $role = "user_id_" . $role;
+                    $this->userSpecialAcl->addRole($role);
+                    $this->userSpecialAcl->allow($role, $controller, $action);
+                }
+            }
         }
+        /**
+         * HANDLE FALLBACK
+         * when isset on key, false
+         */
+        /*
+         * case 1: no config @@
+         * add default role, "admin", "guest"
+         * allow "admin" on ALL controller, action
+         */
+        if(!isset($this->config[self::MAP_ROLE_PARENT])){
+            $this->roleControllerActionAcl->addRole("admin");
+            $this->roleControllerActionAcl->allow("admin", null, null);
+        }
+        /*
+         * case *: exception from "Acl"
+         */
 
     }
 
@@ -189,9 +214,7 @@ class UniAcl{
     private function allow($mapRoleControllerAction, $acl){
         foreach($mapRoleControllerAction as $role => $controllerAction){
             foreach($controllerAction as $controller => $actionArray){
-                foreach($actionArray as $action){
-                    $acl->allow($role, $controller, $action);
-                }
+                $acl->allow($role, $controller, $actionArray);
             }
         }
     }
@@ -235,8 +258,8 @@ class UniAcl{
      * @param $acl
      * @param $newConfig
      */
-    public function updateRoleControllerAction($role, $acl, $newConfig){
-        $oldConfig = $this->getWhereOnRoleAcl($role, $acl);
+    public function updateRoleControllerAction($role, $newConfig){
+        $oldConfig = $this->getWhereOnRoleAcl($role, $this->roleControllerActionAcl);
         $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
         foreach($whereDeny as $controller => $action){
             $this->uniDeny($role, $controller, $action, self::ROLE_CONTROLLER_ACTION);
@@ -248,8 +271,8 @@ class UniAcl{
      * @param $acl
      * @param $newConfig
      */
-    public function updateRoleSpecial($role, $acl, $newConfig){
-        $oldConfig = $this->getWhereOnRoleAcl($role, $acl);
+    public function updateRoleSpecial($role, $newConfig){
+        $oldConfig = $this->getWhereOnRoleAcl($role, $this->roleSpecialAcl);
         $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
         foreach($whereDeny as $controller => $action){
             $this->uniDeny($role, $controller, $action, self::ROLE_SPECIAL);
