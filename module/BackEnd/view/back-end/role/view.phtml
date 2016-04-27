@@ -174,12 +174,12 @@
                 oReq.send(formData);
                 oReq.onload = function(e){
                     var res = oReq.response;
-//                    console.log(res);
-                    var resJsonObj = JSON.parse(res);
+                    console.log(res);
+//                    var resJsonObj = JSON.parse(res);
 //                    console.log(resJsonObj);
 //                    console.log(resJsonObj.info);
 //                    var data = JSON.parse(resJsonObj.info);
-                    console.log(resJsonObj);
+//                    console.log(resJsonObj);
                 };
             });
         });
@@ -336,7 +336,7 @@
             selectDiv = $(selectDiv[0]);
         }
 //        console.log(selectDiv);
-        var sO = selectDiv.find("option:selected").val();
+//        var sO = selectDiv.find("option:selected").val();
 //        console.log(sO);
 
 //        result[sO] = [];
@@ -344,9 +344,9 @@
 //        result[sO]["INHERIT"] = mapRoleWhereInherit;
 //        result[sO]["NOT_INHERIT"] = mapRoleWhereInherit;
 
-        result.role = sO;
-        result.inherit = mapRoleWhereInherit;
-        result.notInherit = mapRoleWhereNotInherit;
+        result["role"] = selectDiv.find("option:selected").val();
+        result["inherit"] = mapRoleWhereInherit;
+        result["notInherit"] = mapRoleWhereNotInherit;
 
 //        console.log(result);
         return result;

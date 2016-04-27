@@ -172,7 +172,9 @@ class UniAcl{
         if(isset($this->config[self::MAP_USER_SPECIAL])){
             foreach($this->config[self::MAP_USER_SPECIAL] as $role => $controllerAction){
                 foreach($controllerAction as $controller => $action){
-                    $role = "user_id_" . $role;
+                    if(is_numeric($role)){
+                        $role = "user_id_" . $role;
+                    }
                     $this->userSpecialAcl->addRole($role);
                     $this->userSpecialAcl->allow($role, $controller, $action);
                 }
@@ -245,7 +247,7 @@ class UniAcl{
         foreach($this->cA as $controller => $actionArray){
             foreach($actionArray as $action){
                 if($acl->isAllowed($role, $controller, $action)){
-                    $result[$controller] = $action;
+                    $result[$controller][] = $action;
                 }
             }
         }
@@ -259,10 +261,15 @@ class UniAcl{
      * @param $newConfig
      */
     public function updateRoleControllerAction($role, $newConfig){
+        $temp = $newConfig;
         $oldConfig = $this->getWhereOnRoleAcl($role, $this->roleControllerActionAcl);
         $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
-        foreach($whereDeny as $controller => $action){
-            $this->uniDeny($role, $controller, $action, self::ROLE_CONTROLLER_ACTION);
+        $a = 100;
+        $b = "vai";
+        foreach($whereDeny as $controller => $actionArray){
+            foreach($actionArray as $action){
+                $this->uniDeny($role, $controller, $action, $this->roleControllerActionAcl);
+            }
         }
     }
 
@@ -274,8 +281,39 @@ class UniAcl{
     public function updateRoleSpecial($role, $newConfig){
         $oldConfig = $this->getWhereOnRoleAcl($role, $this->roleSpecialAcl);
         $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
-        foreach($whereDeny as $controller => $action){
-            $this->uniDeny($role, $controller, $action, self::ROLE_SPECIAL);
+        foreach($whereDeny as $controller => $actionArray){
+            foreach($actionArray as $action){
+                $this->uniDeny($role, $controller, $action, $this->roleSpecialAcl);
+            }
+        }
+    }
+
+    /**
+     * @param $role
+     * @param $controller
+     * @param $action
+     * @param Acl $acl
+     */
+    private function uniDeny($role, $controller, $action, $acl){
+        if($acl->isAllowed($role, $controller, $action)){
+            $acl->deny($role, $controller, $action);
+            /**
+             * editor deny from roleA >>> guest also deny from roleA
+             */
+            $this->roleArray = array();
+            $this->loopParent($role);
+            foreach($this->roleArray as $parentRole){
+                $acl->deny($parentRole, $controller, $action);
+            }
+
+            /**
+             * editor deny from role A >>> admin NOT deny from
+             */
+            $this->roleArray = array();
+            $this->loopInherit($role);
+            foreach($this->roleArray as $inheritRole){
+                $acl->allow($inheritRole, $controller, $action);
+            }
         }
     }
 
@@ -575,7 +613,10 @@ class UniAcl{
             /**
              * @WARN role on user id need explicit compile
              */
-            $role = "user_id_" . $user["id"];
+            $role = $user["id"];
+            if(is_numeric($user["id"])){
+                $role = "user_id_" . $user["id"];
+            }
             if($this->userSpecialAcl->hasRole($role)){
                 if($this->userSpecialAcl->isAllowed($user["id"], $controller, $action)){
                     return true;
@@ -586,40 +627,9 @@ class UniAcl{
     }
 
 
-    public function uniDeny($role, $controller, $privilege, $typeAcl){
-        if($typeAcl === self::ROLE_CONTROLLER_ACTION){
-            if(!$this->roleControllerActionAcl->isAllowed($role, $controller, $privilege)){
-                return;
-            }
-            $this->roleControllerActionAcl->deny($role, $controller, $privilege);
-            /**
-             * editor deny from roleA >>> guest also deny from roleA
-             */
-            $this->roleArray = array();
-            $this->loopParent($role);
-            foreach($this->roleArray as $parentRole){
-                $this->roleControllerActionAcl->deny($parentRole, $controller, $privilege);
-            }
-
-            /**
-             * editor deny from role A >>> admin NOT deny from
-             */
-            $this->roleArray = array();
-            $this->loopInherit($role);
-            foreach($this->roleArray as $inheritRole){
-                $this->roleControllerActionAcl->allow($inheritRole, $controller, $privilege);
-            }
-            return;
-        }
-        if($typeAcl === self::ROLE_SPECIAL){
-            $this->roleSpecialAcl->deny($role, $controller, $privilege);
-            return;
-        }
-        if($typeAcl === self::USER_SPECIAL){
-            $this->userSpecialAcl->deny($role, $controller, $privilege);
-            return;
-        }
-    }
+    //    public function uniDeny($role, $controller, $privilege, $typeAcl){
+    //
+    //    }
 
     public function buildConfig(){
         $this->tempConfig = array();
@@ -652,43 +662,33 @@ class UniAcl{
          */
         foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
             if(is_null($inheritRole)){
-                $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
+                $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role] =
+                    $this->getWhereOnRoleAcl($role, $this->roleControllerActionAcl);
             }
         }
         /*
          * map for child
          */
         foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
-            if(is_null($inheritRole)){
-            }
             $arrayDiff = $this->config[self::CONTROLLER_ACTION];
-            if(is_string($inheritRole)){
-                $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
-                    $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$inheritRole]);
-            }
             if(is_array($inheritRole)){
                 foreach($inheritRole as $s_inheritRole){
                     $arrayDiff = $this->arrayRecursiveDiff($arrayDiff,
                         $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$s_inheritRole]);
                 }
             }
-            //            var_dump($arrayDiff);
-            $this->f($arrayDiff, $this->roleControllerActionAcl, $role);
+            $result = $this->filterArrayWhereRoleAllowed($arrayDiff, $role, $this->roleControllerActionAcl);
+            $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role] = $result;
         }
-        //        $arrayDiff = $this->config[self::CONTROLLER_ACTION];
-        //        $arrayDiff = $this->arrayRecursiveDiff($arrayDiff, $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION]["guest"]);
-        //        var_dump($arrayDiff);
-        //        $this->f($arrayDiff, "editor");
-        //        var_dump($this->tempConfig);
-
         /**
          * map ROLE SPECIAL
          */
-        $allRoles = $this->roleControllerActionAcl->getRoles();
-        foreach($allRoles as $role){
-            if($this->roleSpecialAcl->hasRole($role)){
-                $this->r($this->config[self::CONTROLLER_ACTION], $this->roleSpecialAcl, $role);
-            }
+        //        $allRoles = $this->roleControllerActionAcl->getRoles();
+        foreach($this->getAllRoles() as $role){
+            //            if($this->roleSpecialAcl->hasRole($role)){
+            $result = $this->filterArrayWhereRoleAllowed($this->cA, $role, $this->roleSpecialAcl);
+            $this->tempConfig[self::MAP_ROLE_SPECIAL][$role] = $result;
+            //            }
         }
 
         /**
@@ -696,48 +696,27 @@ class UniAcl{
          */
         $allRoles = $this->userSpecialAcl->getRoles();
         foreach($allRoles as $role){
-            $this->u($this->config[self::CONTROLLER_ACTION], $this->userSpecialAcl, $role);
+            $result = $this->filterArrayWhereRoleAllowed($this->cA, $role, $this->userSpecialAcl);
+            $this->tempConfig[self::MAP_USER_SPECIAL][$role] = $result;
         }
-        //        var_dump($this->tempConfig);
         return $this->tempConfig;
     }
 
     /**
      * @param $controllerAction
-     * @param Acl $typeAcl
+     * @param Acl $acl
      * @param $role
      */
-    private function f($controllerAction, $typeAcl, $role){
+    private function filterArrayWhereRoleAllowed($controllerAction, $role, $acl){
+        $result = array();
         foreach($controllerAction as $controller => $actionArray){
             foreach($actionArray as $action){
-                //check isAllowed on each (controller, action)
-                if($typeAcl->isAllowed($role, $controller, $action)){
-                    $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role][$controller][] = $action;
+                if($acl->isAllowed($role, $controller, $action)){
+                    $result[$controller][] = $action;
                 }
             }
         }
-    }
-
-    private function r($controllerAction, $typeAcl, $role){
-        foreach($controllerAction as $controller => $actionArray){
-            foreach($actionArray as $action){
-                //check isAllowed on each (controller, action)
-                if($typeAcl->isAllowed($role, $controller, $action)){
-                    $this->tempConfig[self::MAP_ROLE_SPECIAL][$role][$controller][] = $action;
-                }
-            }
-        }
-    }
-
-    private function u($controllerAction, $typeAcl, $role){
-        foreach($controllerAction as $controller => $actionArray){
-            foreach($actionArray as $action){
-                //check isAllowed on each (controller, action)
-                if($typeAcl->isAllowed($role, $controller, $action)){
-                    $this->tempConfig[self::MAP_USER_SPECIAL][$role][$controller][] = $action;
-                }
-            }
-        }
+        return $result;
     }
 
     function arrayRecursiveDiff($aArray1, $aArray2){
@@ -746,7 +725,9 @@ class UniAcl{
         foreach($aArray1 as $mKey => $mValue){
             if(array_key_exists($mKey, $aArray2)){
                 if(is_array($mValue)){
-                    $aRecursiveDiff = $this->arrayRecursiveDiff($mValue, $aArray2[$mKey]);
+                    $temp = $aArray2[$mKey];
+                    $a = 100;
+                    $aRecursiveDiff = $this->arrayRecursiveDiff($mValue, $temp);
                     if(count($aRecursiveDiff)){
                         $aReturn[$mKey] = $aRecursiveDiff;
                     }

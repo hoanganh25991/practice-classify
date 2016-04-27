@@ -107,7 +107,7 @@ class RoleController extends AbstractActionController{
             $postParam = $request->getPost();
             $userAction = $postParam->get("userAction");
             $data = $postParam->get("data");
-            $dataObj = json_decode($data);
+            $dataObj = json_decode($data, true);
 
             /**
              * CALL UNIACL for help
@@ -123,10 +123,11 @@ class RoleController extends AbstractActionController{
 //            $a = $role;
 //            $inherit = $dataObj["inherit"];
 //            $notInherit = $dataObj["notInherit"];
-            $uniAcl->updateRoleControllerAction($dataObj->role, $dataObj->inherit);
-            $uniAcl->updateRoleSpecial($dataObj->role, $dataObj->notInherit);
-//            $newConfig = $uniAcl->buildConfig();
-//            $cache->setArrayItem(UniAcl::CONFIG, $newConfig);
+
+            $uniAcl->updateRoleControllerAction($dataObj["role"], $dataObj["inherit"]);
+            $uniAcl->updateRoleSpecial($dataObj["role"], $dataObj["notInherit"]);
+            $newConfig = $uniAcl->buildConfig();
+            $cache->setArrayItem(UniAcl::CONFIG, $newConfig);
             /**
              * HANDLE data, ask some one for help
              */
@@ -134,7 +135,10 @@ class RoleController extends AbstractActionController{
 
             //            var_dump($data, $userAction);
             $view = new JsonModel();
-            $view->setVariable("info", "server day");
+//            $view = new ViewModel();
+            $view->setVariable("info", $newConfig);
+//            $json = [1 => "2", "3" => "vkl"];
+//            $view->setVariable("a", $json);
             return $view;
         }
         $variables = array();
