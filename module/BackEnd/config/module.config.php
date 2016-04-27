@@ -1,5 +1,5 @@
 <?php
-var_dump(\BackEnd\Service\UniAcl::CONFIG);
+//var_dump(\BackEnd\Service\UniAcl::CONFIG);
 return array(
     'controllers' => array(
         'invokables' => array(

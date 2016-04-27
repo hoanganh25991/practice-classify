@@ -1,8 +1,8 @@
 <?php
 namespace FrontEnd;
+
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\Navigation\Page\Mvc;
 
 class Module{
     public function getConfig(){
@@ -21,7 +21,7 @@ class Module{
 
     public function onBootstrap(MvcEvent $e){
         $eventManager = $e->getApplication()->getEventManager();
-//        $serviceManager = $e->getApplication()->getServiceManager();
+        //        $serviceManager = $e->getApplication()->getServiceManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
         $eventManager->attach(MvcEvent::EVENT_DISPATCH, array(

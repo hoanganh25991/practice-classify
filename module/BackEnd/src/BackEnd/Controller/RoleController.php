@@ -1,12 +1,13 @@
 <?php
 namespace BackEnd\Controller;
 
-use BackEnd\Model\UniAclConfigModel;
 use BackEnd\Service\UniAcl;
 use BackEnd\Service\UniCache;
 use BackEnd\Service\UniSession;
+use Zend\Http\Request;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\ServiceManager\ServiceManager;
+use Zend\View\Model\JsonModel;
 use Zend\View\Model\ViewModel;
 
 class RoleController extends AbstractActionController{
@@ -20,6 +21,23 @@ class RoleController extends AbstractActionController{
     }
 
     public function viewAction(){
+        /** @var Request $request */
+
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $postParam = $request->getPost();
+            $userAction = $postParam->get("userAction");
+            $data = $postParam->get("data");
+            /**
+             * HANDLE data, ask some one for help
+             */
+
+
+//            var_dump($data, $userAction);
+            $view = new JsonModel();
+//            $view->setVariable("info", $data);
+            return $view;
+        }
         $view = new ViewModel();
         $view->setVariable("controller", 'BackEnd\Controller\User\viewAction');
         /*
@@ -69,6 +87,7 @@ class RoleController extends AbstractActionController{
         $view->setVariable("allRoles", $uniAcl->getAllRoles());
         $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
         $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
+
         return $view;
     }
 

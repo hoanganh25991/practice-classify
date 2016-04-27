@@ -1,17 +1,13 @@
 <?php
 namespace BackEnd;
 
-use App\Config\UniMedia;
-use BackEnd\Controller\AuthController;
 use BackEnd\Service\UniAcl;
 use BackEnd\Service\UniCache;
 use BackEnd\Service\UniSession;
 use Zend\Mvc\Application;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Zend\Permissions\Acl\Acl;
 use Zend\ServiceManager\ServiceManager;
-use Zend\Session\Container;
 use Zend\Stdlib\ArrayUtils;
 
 class Module{
@@ -85,9 +81,9 @@ class Module{
          */
         $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
-//        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-//        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-//        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        //        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        //        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
+        //        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         $uniAcl->buildConfig();
         /**
          * GET USER FROM SESSION

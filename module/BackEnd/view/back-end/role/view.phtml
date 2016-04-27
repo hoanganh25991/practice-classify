@@ -1,4 +1,5 @@
 ﻿<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+<script src="/js/JSON.prune.js"></script>
 <h3><?php var_dump($this->_vars); ?></h3>
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
@@ -20,7 +21,9 @@
         <div class="panel-group" id="panelParent">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">role</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">
+                        role
+                    </div>
                 </div>
                 <div id="rolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -31,7 +34,9 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map role where</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map
+                        role where
+                    </div>
                 </div>
                 <div id="mapPanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -43,13 +48,16 @@
                             <div id="mapRoleWhereInherit"></div>
                             <h3>NOT INHERIT</h3>
                             <div id="mapRoleWhereNotInherit"></div>
+                            <button id="btnMapRoleWhere" class="btn btn-primary">save change</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">all roles</div>
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">
+                        all roles
+                    </div>
                 </div>
                 <div id="allRolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
@@ -60,7 +68,8 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#controllerActionPanelBody">controller
+                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse"
+                         href="#controllerActionPanelBody">controller
                         action
                     </div>
                 </div>
@@ -68,6 +77,7 @@
                     <div class="panel-body">
                         <p>hien thi tat cac controller action</p>
                         <div id="allControllerActionShow"></div>
+                        <div id="save"></div>
                     </div>
                 </div>
             </div>
@@ -86,7 +96,9 @@
             /**
              * READ CONFIG from server
              */
+            console.log($("#uniAclConfig").val());
             var uniAclConfig = JSON.parse($("#uniAclConfig").val());
+            console.log(uniAclConfig);
             var userActionOnRole = JSON.parse($("#userActionOnRole").val());
 
             var allRoles = JSON.parse($("#allRoles").val());
@@ -106,14 +118,17 @@
                 var optionSelected = $(this).children("option:selected");
                 var role = optionSelected.val();
                 console.log(role);
-                var s = buildTreeData(mapRoleWhere[role][INHERIT]);
-                console.log(s);
+//                var s = buildTreeData(mapRoleWhere[role][INHERIT]);
+//                console.log(s);
                 //clean div container treeview
                 $("#mapRoleWhereInherit").empty();
                 $("#mapRoleWhereNotInherit").empty();
                 renderTree(mapRoleWhere[role][INHERIT], "#mapRoleWhereInherit");
                 renderTree(mapRoleWhere[role][NOT_INHERIT], "#mapRoleWhereNotInherit");
+//                buildObjectToSend();
+
             });
+
             /**
              * ALL ROLES
              */
@@ -130,6 +145,42 @@
                 var treeData = {};
                 getTreeData(ul, treeData);
                 console.log(treeData);
+            });
+
+            $("#btnMapRoleWhere").on("click", function(){
+//                getTreeData()
+//                var a = {};
+//                console.log($("#mapRoleWhereInherit").children("ul"));
+//                getTreeData($("#mapRoleWhereInherit").children("ul"), a);
+                var result = buildObjectToSend();
+//                console.log(result);
+//                var inheritX = result.editor.INHERIT;
+//                console.log(inheritX);
+//                console.log(JSON.stringify(inheritX));
+                /**
+                 * ajax push to /admin/role/edit
+                 */
+                    /** @warn JSON stringify not work on DEEP object */
+//                var x = result.editor[0];
+//                console.log(JSON.stringify(x));
+                var resultJsonString = JSON.stringify(result);
+                console.log(resultJsonString);
+                var formData = new FormData();
+                formData.append("userAction", "edit");
+                formData.append("data", resultJsonString);
+                var oReq = new XMLHttpRequest();
+                var url = "/admin/role";
+                oReq.open("post", url);
+                oReq.send(formData);
+                oReq.onload = function(e){
+                    var res = oReq.response;
+//                    console.log(res);
+                    var resJsonObj = JSON.parse(res);
+//                    console.log(resJsonObj);
+//                    console.log(resJsonObj.info);
+//                    var data = JSON.parse(resJsonObj.info);
+//                    console.log(data);
+                };
             });
         });
     })(jQuery);
@@ -269,6 +320,36 @@
         /**
          * SPECIAL, not inherit
          */
+    }
+
+    function buildObjectToSend(){
+        var result = {};
+        var mapRoleWhereInherit = {};
+        getTreeData($("#mapRoleWhereInherit").children("ul"), mapRoleWhereInherit);
+//        console.log(mapRoleWhereInherit);
+        var mapRoleWhereNotInherit = {};
+        getTreeData($("#mapRoleWhereNotInherit").children("ul"), mapRoleWhereNotInherit);
+
+        var selectDiv = $("#selectContainer").find("select");
+        /** explicit try on first child */
+        if(selectDiv.length > 0){
+            selectDiv = $(selectDiv[0]);
+        }
+//        console.log(selectDiv);
+        var sO = selectDiv.find("option:selected").val();
+//        console.log(sO);
+
+//        result[sO] = [];
+//        /** @warn INHERT/NOT_INHERIT is not define */
+//        result[sO]["INHERIT"] = mapRoleWhereInherit;
+//        result[sO]["NOT_INHERIT"] = mapRoleWhereInherit;
+
+        result.role = sO;
+        result.inherit = mapRoleWhereInherit;
+        result.notInherit = mapRoleWhereNotInherit;
+
+//        console.log(result);
+        return result;
     }
 </script>
 
