@@ -1,6 +1,7 @@
 <?php
 namespace BackEnd\Service;
 
+use Exception;
 use Zend\Permissions\Acl\Acl;
 
 /**
@@ -8,17 +9,17 @@ use Zend\Permissions\Acl\Acl;
  * @package BackEnd\Service
  *
  * UNIACL RULE
- * role on controller action, beside of that
- * each role has its own "special"
- * "special" is a specific controler-action,
- * "special" bcs it not effected by inherit|level
+ * as normal acl for "role" on "controller action"
  *
- * role has its own "special"
- * user also has its own "special", not effect by role ^^
+ * beside of that, "role" can go to "special-place"
+ * which not share inherit
+ *
+ * user also has its own "special"
+ * not effect by role ^^
  */
 class UniAcl{
     const CONFIG = "UNI_ACL_CONFIG";
-    const ROLE_INHERIT = "ROLE_INHERIT";
+    const MAP_ROLE_PARENT = "ROLE_INHERIT";
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
@@ -41,6 +42,8 @@ class UniAcl{
     protected $controllerAction;
 
     protected $tempConfig;
+
+    protected $cA;
 
     /*
      * ROLE => array(
@@ -75,18 +78,195 @@ class UniAcl{
         )
      */
     public function __construct(array $config){
+        /**
+         * check config before init
+         * config must have CONTROLLER_ACTION
+         */
+        if(!isset($config[self::CONTROLLER_ACTION])){
+            throw new Exception('config must have CONTROLLER_ACTION');
+        }
         $this->config = $config;
         $this->roleControllerActionAcl = new Acl();
         $this->roleSpecialAcl = new Acl();
         $this->userSpecialAcl = new Acl();
+        $this->cA = $this->config[self::CONTROLLER_ACTION];
     }
+
+    /**
+     * INIT
+     * we have 3 ACL inside UniAcl
+     * 1. Role Controller Action
+     * 2. Role Special
+     * 3. User Special
+     */
+    public function init(){
+        /**
+         * ROLE CONTROLLER ACTION
+         * 1. add ROLE
+         * 2. add CONTROLLER
+         * 3. map ROLE CONTROLLER ACTION
+         */
+        //1. add ROLE
+        if(isset($this->config[self::MAP_ROLE_PARENT])){
+            $mapRoleParent = $this->config[self::MAP_ROLE_PARENT];
+            foreach($mapRoleParent as $role => $parent){
+                $this->roleControllerActionAcl->addRole($role, $parent);
+            }
+        }
+        //2. add CONTROLLER
+        //config ensure CONTROLLER_ACTION when init
+        $this->loadController($this->roleControllerActionAcl);
+        //3. map ROLE CONTROLLER ACTION
+        if(isset($this->config[self::MAP_ROLE_CONTROLLER_ACTION])){
+            $mapRoleControllerAction = $this->config[self::MAP_ROLE_CONTROLLER_ACTION];
+            $this->allow($mapRoleControllerAction, $this->roleControllerActionAcl);
+        }
+
+        /**
+         * ROLE SPECIAL
+         * 1. add ROLE
+         * 2. add CONTROLLER
+         * 3. map ROLE SPECIAL
+         */
+        //1. add ROLE
+        //bcs, ROLE SPECIAL and ROLE CONTROLLER ACTION
+        //share the same role in MAP ROLE PARENT
+        //ROLE SPECIAL not accept inherit from parent
+        $allRoles = $this->getAllRoles();
+        if(count($allRoles) > 0){
+            foreach($allRoles as $role){
+                $this->roleSpecialAcl->addRole($role);
+            }
+        }
+        //2. add CONTROLLER
+        //note: ROLE SPECIAL share same CONTROLLER
+        $this->loadController($this->roleSpecialAcl);
+        //3. map ROLE SPECIAL
+        if(isset($this->config[self::MAP_ROLE_SPECIAL])){
+            $mapRoleSpecial = $this->config[self::MAP_ROLE_SPECIAL];
+            $this->allow($mapRoleSpecial, $this->roleSpecialAcl);
+        }
+        /**
+         * USER SPECIAL
+         * 1. add ROLE
+         * 2. add CONTROLLER
+         * 3. map USER SPECIAL
+         */
+        //1. add ROLE
+        //user email as role in USER SPECIAL
+        //add role base on map USER SPECIAL
+        if(isset($this->config[self::MAP_USER_SPECIAL])){
+            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
+            foreach($mapUserSpecial as $role){
+                $this->userSpecialAcl->addRole($role);
+            }
+        }
+        //2. add CONTROLLER
+        //note: USER SPECIAL share same CONTROLLER
+        $this->loadController($this->userSpecialAcl);
+        //3. map USER CONTROLLER
+        if(isset($this->config[self::MAP_USER_SPECIAL])){
+            $mapUserSpecial = $this->config[self::MAP_USER_SPECIAL];
+            $this->allow($mapUserSpecial, $this->userSpecialAcl);
+        }
+
+    }
+
+    /**
+     * @param Acl $acl
+     */
+    private function loadController($acl){
+        $controllerArray = array_keys($this->config[self::CONTROLLER_ACTION]);
+        foreach($controllerArray as $controller){
+            $acl->addResource($controller);
+        }
+    }
+
+    /**
+     * @param array $mapRoleControllerAction
+     * @param Acl $acl
+     */
+    private function allow($mapRoleControllerAction, $acl){
+        foreach($mapRoleControllerAction as $role => $controllerAction){
+            foreach($controllerAction as $controller => $actionArray){
+                foreach($actionArray as $action){
+                    $acl->allow($role, $controller, $action);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return array $allRoles
+     */
+    private function getAllRoles(){
+        $allRoles = array();
+        if(isset($this->config[self::MAP_ROLE_PARENT])){
+            $mapRoleParent = $this->config[self::MAP_ROLE_PARENT];
+            $allRoles = array_keys($mapRoleParent);
+            return $allRoles;
+        }
+        return $allRoles;
+    }
+
+    /**
+     * GET WHERE ON ROLE at ACL
+     */
+    /**
+     * @param string $role
+     * @param Acl $acl
+     * @return array $result
+     */
+    public function getWhereOnRoleAcl($role, $acl){
+        $result = array();
+        foreach($this->cA as $controller => $actionArray){
+            foreach($actionArray as $action){
+                if($acl->isAllowed($role, $controller, $action)){
+                    $result[$controller] = $action;
+                }
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @warn $acl need tell it TYPE
+     * @param $role
+     * @param $acl
+     * @param $newConfig
+     */
+    public function updateRoleControllerAction($role, $acl, $newConfig){
+        $oldConfig = $this->getWhereOnRoleAcl($role, $acl);
+        $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
+        foreach($whereDeny as $controller => $action){
+            $this->uniDeny($role, $controller, $action, self::ROLE_CONTROLLER_ACTION);
+        }
+    }
+
+    /** @warn $acl need tell it TYPE
+     * @param $role
+     * @param $acl
+     * @param $newConfig
+     */
+    public function updateRoleSpecial($role, $acl, $newConfig){
+        $oldConfig = $this->getWhereOnRoleAcl($role, $acl);
+        $whereDeny = $this->arrayRecursiveDiff($oldConfig, $newConfig);
+        foreach($whereDeny as $controller => $action){
+            $this->uniDeny($role, $controller, $action, self::ROLE_SPECIAL);
+        }
+    }
+
+    /**
+     * ANY CHANGE NEED BUILD CONFIG
+     * into init config
+     */
 
 
     /**
      * INIT
      *
      */
-    public function init(){
+    public function sinit(){
         /**
          * ADD ROLE
          * ADD CONTROLLER
@@ -100,9 +280,9 @@ class UniAcl{
                 "admin" => "editor"
             ),
          */
-        if(isset($this->config[self::ROLE_INHERIT])){
-            foreach($this->config[self::ROLE_INHERIT] as $role => $inherit){
-//                var_dump($role, $inherit);
+        if(isset($this->config[self::MAP_ROLE_PARENT])){
+            foreach($this->config[self::MAP_ROLE_PARENT] as $role => $inherit){
+                //                var_dump($role, $inherit);
                 $this->roleControllerActionAcl->addRole($role, $inherit);
             }
         }
@@ -189,7 +369,7 @@ class UniAcl{
          * add default role, "admin", "guest"
          * allow "admin" on ALL controller, action
          */
-        if(!isset($this->config[self::ROLE_INHERIT])){
+        if(!isset($this->config[self::MAP_ROLE_PARENT])){
             $this->roleControllerActionAcl->addRole("admin");
             $this->roleControllerActionAcl->allow("admin", null, null);
         }
@@ -240,7 +420,7 @@ class UniAcl{
          * get role which this role inherit
          */
         /** @var array|string|null $inherit */
-        $inherit = $this->config[self::ROLE_INHERIT][$role];
+        $inherit = $this->config[self::MAP_ROLE_PARENT][$role];
 
         if(is_null($inherit)){
             return;
@@ -324,19 +504,19 @@ class UniAcl{
          * config has NO ROLE
          */
         //add role for user
-        if(!isset($this->config[self::ROLE_INHERIT])){
+        if(!isset($this->config[self::MAP_ROLE_PARENT])){
             $user["role"] = "admin";
         }
         /**
          * config has ROLE
          * unlogged|logged user without role, is "guest"
          */
-        if(isset($this->config[self::ROLE_INHERIT])){
+        if(isset($this->config[self::MAP_ROLE_PARENT])){
             if(!isset($user["role"])){
                 $user["role"] = "guest";
             }
         }
-//        var_dump($user);
+        //        var_dump($user);
         /**
          * CHECK HAS ROLE FIRST
          * nothing ensure role of user is loaded into acl
@@ -438,7 +618,7 @@ class UniAcl{
             if(count($this->roleArray) === 0){
                 $this->roleArray = null;
             }
-            $this->tempConfig[self::ROLE_INHERIT][$role] = $this->roleArray;
+            $this->tempConfig[self::MAP_ROLE_PARENT][$role] = $this->roleArray;
         }
         //        var_dump($tempConfig);
         /**
@@ -447,7 +627,7 @@ class UniAcl{
         /*
          * map role for f1 parent, who not inherit from anyone
          */
-        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
+        foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
             if(is_null($inheritRole)){
                 $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
             }
@@ -455,7 +635,7 @@ class UniAcl{
         /*
          * map for child
          */
-        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
+        foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
             if(is_null($inheritRole)){
             }
             $arrayDiff = $this->config[self::CONTROLLER_ACTION];
@@ -495,7 +675,7 @@ class UniAcl{
         foreach($allRoles as $role){
             $this->u($this->config[self::CONTROLLER_ACTION], $this->userSpecialAcl, $role);
         }
-//        var_dump($this->tempConfig);
+        //        var_dump($this->tempConfig);
         return $this->tempConfig;
     }
 
@@ -561,7 +741,7 @@ class UniAcl{
 
     public function getMap(){
         $this->tempConfig = array();
-        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
+        foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
             if(is_null($inheritRole)){
                 $this->f($this->config[self::CONTROLLER_ACTION], $this->roleControllerActionAcl, $role);
             }
@@ -569,7 +749,7 @@ class UniAcl{
         /*
          * map for child
          */
-        foreach($this->tempConfig[self::ROLE_INHERIT] as $role => $inheritRole){
+        foreach($this->tempConfig[self::MAP_ROLE_PARENT] as $role => $inheritRole){
             if(is_null($inheritRole)){
             }
             $arrayDiff = $this->config[self::CONTROLLER_ACTION];
@@ -593,19 +773,19 @@ class UniAcl{
         //        var_dump($this->tempConfig);
     }
 
-//    public function getWhereOnRole($role){
-//        $where = array();
-//        $this->buildConfig();
-//        var_dump($this->tempConfig);
-//        $where[$role] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role];
-//        $this->roleArray = array();
-//        $this->loopParent($role);
-//        foreach($this->roleArray as $parentRole){
-//            $where[$parentRole] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$parentRole];
-//        }
-//
-//        return $where;
-//    }
+    //    public function getWhereOnRole($role){
+    //        $where = array();
+    //        $this->buildConfig();
+    //        var_dump($this->tempConfig);
+    //        $where[$role] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$role];
+    //        $this->roleArray = array();
+    //        $this->loopParent($role);
+    //        foreach($this->roleArray as $parentRole){
+    //            $where[$parentRole] = $this->tempConfig[self::MAP_ROLE_CONTROLLER_ACTION][$parentRole];
+    //        }
+    //
+    //        return $where;
+    //    }
 
     public function getAllOnRole($role){
         $user = [];
@@ -621,9 +801,9 @@ class UniAcl{
         return $r;
     }
 
-    public function getAllRoles(){
-        return $this->roleControllerActionAcl->getRoles();
-    }
+    //    public function getAllRoles(){
+    //        return $this->roleControllerActionAcl->getRoles();
+    //    }
 
     public function getAllControllerAction(){
         return $this->roleControllerActionAcl->getResources();
@@ -666,7 +846,7 @@ class UniAcl{
         /**
          * get controller action on role
          */
-//        $arrayDiff = array_diff($this->config[self::])
+        //        $arrayDiff = array_diff($this->config[self::])
     }
 
     public function getControllerActionOnAclRole($role, $acl){
@@ -680,4 +860,6 @@ class UniAcl{
         }
         return $result;
     }
+
+
 }

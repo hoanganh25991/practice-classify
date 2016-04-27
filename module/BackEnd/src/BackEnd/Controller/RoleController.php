@@ -53,7 +53,7 @@ class RoleController extends AbstractActionController{
         $cache = $this->serviceManager->get("UniCache");
         $uniAclConfig = $cache->getArrayItem(UniAcl::CONFIG);
         $uniAcl = new UniAcl($uniAclConfig);
-        $uniAcl->init();
+        $uniAcl->sinit();
 
         /**
          * GET USER FROM SESSION
@@ -83,7 +83,7 @@ class RoleController extends AbstractActionController{
 //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
         $view->setVariable("uniAclConfig", $uniAclConfig);
         $view->setVariable("userActionOnRole", $userActionOnRole);
-        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::ROLE_INHERIT]);
+        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
         $view->setVariable("allRoles", $uniAcl->getAllRoles());
         $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
         $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
