@@ -199,7 +199,7 @@ class UniAcl{
     /**
      * @return array $allRoles
      */
-    private function getAllRoles(){
+    public function getAllRoles(){
         $allRoles = array();
         if(isset($this->config[self::MAP_ROLE_PARENT])){
             $mapRoleParent = $this->config[self::MAP_ROLE_PARENT];

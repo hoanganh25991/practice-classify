@@ -53,7 +53,7 @@ class RoleController extends AbstractActionController{
         $cache = $this->serviceManager->get("UniCache");
         $uniAclConfig = $cache->getArrayItem(UniAcl::CONFIG);
         $uniAcl = new UniAcl($uniAclConfig);
-        $uniAcl->sinit();
+        $uniAcl->init();
 
         /**
          * GET USER FROM SESSION

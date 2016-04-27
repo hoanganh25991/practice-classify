@@ -80,7 +80,7 @@ class Module{
          * INIT ACL BY CONFIG
          */
         $uniAcl = new UniAcl($uniAclConfig);
-        $uniAcl->sinit();
+        $uniAcl->init();
         //        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         //        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         //        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
