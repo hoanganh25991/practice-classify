@@ -93,6 +93,8 @@
             const ROLE = "ROLE";
             const INHERIT = "INHERIT";
             const NOT_INHERIT = "NOT_INHERIT";
+            const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
+            const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
             /**
              * READ CONFIG from server
              */
@@ -123,8 +125,8 @@
                 //clean div container treeview
                 $("#mapRoleWhereInherit").empty();
                 $("#mapRoleWhereNotInherit").empty();
-                renderTree(mapRoleWhere[role][INHERIT], "#mapRoleWhereInherit");
-                renderTree(mapRoleWhere[role][NOT_INHERIT], "#mapRoleWhereNotInherit");
+                renderTree(mapRoleWhere[MAP_ROLE_CONTROLLER_ACTION][role], "#mapRoleWhereInherit");
+                renderTree(mapRoleWhere[MAP_ROLE_SPECIAL][role], "#mapRoleWhereNotInherit");
 //                buildObjectToSend();
 
             });
@@ -160,7 +162,7 @@
                 /**
                  * ajax push to /admin/role/edit
                  */
-                    /** @warn JSON stringify not work on DEEP object */
+                /** @warn JSON stringify not work on DEEP object */
 //                var x = result.editor[0];
 //                console.log(JSON.stringify(x));
                 var resultJsonString = JSON.stringify(result);
@@ -174,12 +176,15 @@
                 oReq.send(formData);
                 oReq.onload = function(e){
                     var res = oReq.response;
-                    console.log(res);
-//                    var resJsonObj = JSON.parse(res);
-//                    console.log(resJsonObj);
+//                    console.log(res);
+                    var resJsonObj = JSON.parse(res);
+                    console.log(resJsonObj);
 //                    console.log(resJsonObj.info);
 //                    var data = JSON.parse(resJsonObj.info);
 //                    console.log(resJsonObj);
+//                    mapRoleWhere = data;
+                    mapRoleWhere = resJsonObj["info"];
+
                 };
             });
         });
@@ -256,42 +261,6 @@
             }
         }
     }
-    //    function init(){
-    //        var title = actionDiv();
-    //        $('[data-toggle="tooltip"]').tooltip({
-    //            html: true
-    //            title: title
-    //        });
-    //    }
-
-    //    function actionDiv(userActionRole){
-    //        /**
-    //         * action user can
-    //         */
-    //        var actionDiv = $("<div>");
-    //        var sampleIcon = $("<span class='glyphicon'></span>");
-    //        for(var key in userActionOnRole){
-    //            if(userActionOnRole.hasOwnProperty(key)){
-    //                var action = userActionOnRole[key];
-    //                var icon = sampleIcon.clone();
-    //                switch(action){
-    //                    case "edit":
-    //                        icon.addClass("glyphicon-pencil");
-    //                        break;
-    //                    case "add":
-    //                        icon.addClass("glyphicon-plus");
-    //                        break;
-    //                    case "delete":
-    //                        icon.addClass("glyphicon-trash");
-    //                        break;
-    //                    default:
-    //                        break;
-    //                }
-    //                actionDiv.append(icon);
-    //            }
-    //        }
-    //        return actionDiv;
-    //    }
 
     function renderAllRoles(allRoles, containerDiv){
 //            <select class="selectpicker">
@@ -335,14 +304,6 @@
         if(selectDiv.length > 0){
             selectDiv = $(selectDiv[0]);
         }
-//        console.log(selectDiv);
-//        var sO = selectDiv.find("option:selected").val();
-//        console.log(sO);
-
-//        result[sO] = [];
-//        /** @warn INHERT/NOT_INHERIT is not define */
-//        result[sO]["INHERIT"] = mapRoleWhereInherit;
-//        result[sO]["NOT_INHERIT"] = mapRoleWhereInherit;
 
         result["role"] = selectDiv.find("option:selected").val();
         result["inherit"] = mapRoleWhereInherit;

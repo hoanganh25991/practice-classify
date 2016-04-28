@@ -839,8 +839,8 @@ class UniAcl{
                 }
 
             }
-            $result[$role][self::INHERIT] = $inheritWhere;
-            $result[$role][self::NOT_INHERIT] = $notInheritWhere;
+            $result[self::MAP_ROLE_CONTROLLER_ACTION][$role] = $inheritWhere;
+            $result[self::MAP_ROLE_SPECIAL][$role] = $notInheritWhere;
         }
         return $result;
     }
