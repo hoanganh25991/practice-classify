@@ -1,0 +1,75 @@
+<!--<h3>--><?php //var_dump($this->__vars); ?><!--</h3>-->
+<?php //var_dump($this->allUsers); ?>
+<?php //var_dump(json_encode($this->allUsers)); ?>
+<input type="hidden" id="allUsers" value='<?php echo json_encode($this->allUsers); ?>'>
+<input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
+<button class="btn btn-primary">add</button>
+
+<div class="row">
+    <div id="userSelectPicker" class="col-md-4"></div>
+    <div id="roleSelectPicker" class="col-md-4"></div>
+</div>
+<script>
+    (function($){
+        window.UserRoleView = function(idCollection){
+            this.id = idCollection;
+//            console.log($("#" + this.id.data.allUsers).val());
+            this.allUsers = JSON.parse($("#" + this.id.data.allUsers).val());
+            this.allRoles = JSON.parse($("#" + this.id.data.allRoles).val());
+//            console.log(this.allUsers);
+
+        };
+        UserRoleView.prototype = {
+            render: function(){
+                this.renderUserSelection(this.allUsers, this.id.render.userSelectPicker);
+                this.renderSelection(this.allRoles, this.id.render.roleSelectPicker);
+            },
+            renderUserSelection: function(data, divId){
+                var users = [];
+                for(var key in this.allUsers){
+                    if(this.allUsers.hasOwnProperty(key)){
+                        var singleUser = this.allUsers[key];
+                        users.push(singleUser["id"] + "|" + singleUser["email"]);
+                    }
+                }
+                this.renderSelection(users, divId);
+            },
+            renderSelection: function(data, divId){
+                //            <select class="selectpicker">
+                //                <option>Mustard</option>
+                //                <option>Ketchup</option>
+                //                <option>Relish</option>
+                //            </select>
+                var select = $('<select class="selectpicker">');
+                var optionBlank = $('<option selected disabled hidden style="display: none" value=""></option>');
+                select.append(optionBlank);
+                var optionSample = $("<option>");
+                for(var key in data){
+                    if(data.hasOwnProperty(key)){
+                        var option = optionSample.clone();
+                        option.html(data[key]);
+                        select.append(option);
+                    }
+                }
+                $("#" + divId).append(select);
+            },
+//            renderRoleSelection: function(data, divId){
+//
+//            }
+
+        };
+        var idCollection = {
+            data: {
+                allUsers: "allUsers",
+                allRoles: "allRoles",
+            },
+            render: {
+                userSelectPicker: "userSelectPicker",
+                roleSelectPicker: "roleSelectPicker",
+            }
+        };
+        var userRoleView = new UserRoleView(idCollection);
+        userRoleView.render();
+
+    })(jQuery);
+</script>

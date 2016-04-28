@@ -1,6 +1,7 @@
 <?php
 namespace BackEnd;
 
+use BackEnd\Database\AclTable;
 use BackEnd\Service\UniAcl;
 use BackEnd\Service\UniCache;
 use BackEnd\Service\UniSession;
@@ -76,8 +77,10 @@ class Module{
             $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
             $uniAclConfig = $tempConfig;
             $cache->setArrayItem(UniAcl::CONFIG, $tempConfig);
+            /** @var AclTable $aclTable */
             $aclTable = $serviceManager->get('AclTable');
             $aclTable->insert($tempConfig);
+//            var_dump($aclTable->getLastRow());
         }
         /**
          * INIT ACL BY CONFIG
@@ -93,8 +96,8 @@ class Module{
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-        $user["role"] = "admin";
-
+//        $user["role"] = "admin";
+//        var_dump($user);
         /*
          *
          */

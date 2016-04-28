@@ -64,7 +64,7 @@ class AuthController extends AbstractActionController{
                  */
                 $email = $data->get('email');
                 /** @var UserTable $userTable */
-                $userTable = $this->serviceManager->get("UserTableQuery");
+                $userTable = $this->serviceManager->get("UserTable");
 
                 /** @var array|false $user */
                 $user = $userTable->findWhere(array('email' => $email));

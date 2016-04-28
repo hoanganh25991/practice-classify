@@ -9,6 +9,8 @@ return array(
         'factories' => array(
             'BackEnd\Controller\Auth' => 'BackEnd\Factory\AuthControllerFactory',
             'BackEnd\Controller\Role' => 'BackEnd\Factory\RoleControllerFactory',
+            'BackEnd\Controller\User' => 'BackEnd\Factory\UserControllerFactory',
+
         ),
     ),
     'router' => array(
@@ -63,7 +65,7 @@ return array(
                     ),
                 ),
             ),
-            'user-view' => array(
+            'role-view' => array(
                 'type' => 'literal',
                 'options' => array(
                     'route' => '/admin/role',
@@ -73,7 +75,7 @@ return array(
                     ),
                 ),
             ),
-            'user-add' => array(
+            'role-add' => array(
                 'type' => 'literal',
                 'options' => array(
                     'route' => '/admin/role/add',
@@ -83,7 +85,7 @@ return array(
                     ),
                 ),
             ),
-            'user-edit' => array(
+            'role-edit' => array(
                 'type' => 'literal',
                 'options' => array(
                     'route' => '/admin/role/edit',
@@ -93,13 +95,23 @@ return array(
                     ),
                 ),
             ),
-            'user-delete' => array(
+            'role-delete' => array(
                 'type' => 'literal',
                 'options' => array(
                     'route' => '/admin/role/delete',
                     'defaults' => array(
                         'controller' => 'BackEnd\Controller\Role',
                         'action' => 'delete',
+                    ),
+                ),
+            ),
+            'user-role' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/admin/user/role',
+                    'defaults' => array(
+                        'controller' => 'BackEnd\Controller\User',
+                        'action' => 'add',
                     ),
                 ),
             ),

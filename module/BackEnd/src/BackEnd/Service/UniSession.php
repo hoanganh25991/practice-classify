@@ -41,6 +41,8 @@ class UniSession{
 
     public function remove($className, $event){
         $container = new Container($className, $this->manager);
-        $container->offsetGet($event);
+        if($container->offsetGet($event)){
+            $container->offsetUnset($event);
+        };
     }
 }

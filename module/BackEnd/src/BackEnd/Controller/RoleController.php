@@ -1,6 +1,7 @@
 <?php
 namespace BackEnd\Controller;
 
+use BackEnd\Database\AclTable;
 use BackEnd\Service\UniAcl;
 use BackEnd\Service\UniCache;
 use BackEnd\Service\UniSession;
@@ -28,21 +29,21 @@ class RoleController extends AbstractActionController{
     public function viewAction(){
         /** @var Request $request */
 
-        $request = $this->getRequest();
-        if($request->isPost()){
-            $postParam = $request->getPost();
-            $userAction = $postParam->get("userAction");
-            $data = $postParam->get("data");
-            /**
-             * HANDLE data, ask some one for help
-             */
-
-
-            //            var_dump($data, $userAction);
-            $view = new JsonModel();
-            //            $view->setVariable("info", $data);
-            return $view;
-        }
+//        $request = $this->getRequest();
+//        if($request->isPost()){
+//            $postParam = $request->getPost();
+//            $userAction = $postParam->get("userAction");
+//            $data = $postParam->get("data");
+//            /**
+//             * HANDLE data, ask some one for help
+//             */
+//
+//
+//            //            var_dump($data, $userAction);
+//            $view = new JsonModel();
+//            //            $view->setVariable("info", $data);
+//            return $view;
+//        }
         $view = new ViewModel();
         $view->setVariable("controller", 'BackEnd\Controller\User\viewAction');
         /*
@@ -65,7 +66,7 @@ class RoleController extends AbstractActionController{
          */
         $uniSession = new UniSession();
         $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-        $user["role"] = "admin";
+//        $user["role"] = "admin";
         $userActionOnRole = array();
         foreach($this->roleAction as $action){
             if($uniAcl->isUniAllowed($user, 'BackEnd\Controller\Role', $action)){
@@ -88,7 +89,7 @@ class RoleController extends AbstractActionController{
         //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
         //        $reBuildConfig = $uniAcl->buildConfig();
         $view->setVariable("uniAclConfig", $uniAcl->getConfigForUI());
-        $view->setVariable("userActionOnRole", $userActionOnRole);
+        $view->setVariable("userAction", $userActionOnRole);
         //        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
         $view->setVariable("allRoles", $uniAcl->getAllRoles());
         //        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
@@ -154,6 +155,7 @@ class RoleController extends AbstractActionController{
             /**
              * save into dabase
              */
+            /** @var AclTable $aclTable */
             $aclTable = $this->serviceManager->get('AclTable');
             $aclTable->insert($newConfig);
             /**

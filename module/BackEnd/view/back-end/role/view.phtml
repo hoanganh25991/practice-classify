@@ -2,17 +2,21 @@
 <script src="/js/JSON.prune.js"></script>
 <!--<script src="/js/watch-listen-to-object-change.js"></script>-->
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
-<input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
+<input type="hidden" id="userAction" value='<?php echo json_encode($this->userAction); ?>'>
 <input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
 
-<li id="sampleRoleRow" style="display: none;">
-    <input type="text" readonly name="inheritRole">
+<li id="sampleRoleParentRow" style="display: none;">
+    <input type="text" readonly name="role">
     <input type="text" readonly name="parentRole">
-    <button class="btn btn-primary allowedAction" data-container="body" data-toggle="tooltip"
-            data-placement="right">action
+    <button class="btn btn-primary" data-container="body" data-toggle="tooltip"
+            data-placement="right"><span class="glyphicon glyphicon-cog"></span>
     </button>
 </li>
-
+<div id="actionDivSample">
+    <span class="glyphicon glyphicon-pencil btnedit"></span>
+    <span class="glyphicon glyphicon-plus btnadd"></span>
+    <span class="glyphicon glyphicon-trash btndelete"></span>
+</div>
 <!--<div class="row">-->
 <!--    <div class="col-md-8">-->
 <!--        <div class="panel-group" id="panelParent">-->
@@ -113,7 +117,7 @@
         </div>
         <div>
             <span class="h3">mapRoleControllerAction</span>
-            <span class="btn btn-default" data-toggle="modal" data-target="#modalControllerAction"
+            <span class="btn btn-default btnadd" data-toggle="modal" data-target="#modalControllerAction"
                   id="btnAddControllerAction">add
             </span>
         </div>
@@ -121,13 +125,13 @@
         <div id="mapRoleControllerAction"></div>
         <div>
             <span class="h3">mapRoleSpecial</span>
-            <span class="btn btn-default" data-toggle="modal" data-target="#modalControllerAction"
+            <span class="btn btn-default btnadd" data-toggle="modal" data-target="#modalControllerAction"
                   id="btnAddSpecial">add</span>
         </div>
         <div id="mapRoleSpecial"></div>
 
     </div>
-    <button class="btn btn-default" id="btnSaveMapRoleWhere">save</button>
+    <button class="btn btn-default btnedit" id="btnSaveMapRoleWhere">save</button>
 </div><!--map role where-->
 <div id="allRoles_1">
     <h3>allRoles</h3>
@@ -135,14 +139,15 @@
 <div>
     <h3>allControllerAction</h3>
     <div id="allControllerAction"></div>
-    <button class="btn btn-default" id="btnRebuildControllerAction">rebuild</button>
+    <button class="btn btn-default btnedit" id="btnRebuildControllerAction">rebuild</button>
 </div><!--all controller action-->
 <script>
     (function(){
         $(document).ready(function(){
             window.AdminRoleView = function(idCollection){
                 this.id = idCollection;
-                this.userActionOnRole = JSON.parse($("#" + this.id.data.userActionRole).val());
+//                console.log($("#" + this.id.data.userAction).val());
+                this.userAction = JSON.parse($("#" + this.id.data.userAction).val());
                 this.allRoles = JSON.parse($("#" + this.id.data.allRoles).val());
                 this.uniAclConfig = JSON.parse($("#" + this.id.data.uniAclConfig).val());
             };
@@ -158,7 +163,10 @@
 
                 render: function(){
                     console.log(this.uniAclConfig);
-                    this.renderMapRoleParent(this.uniAclConfig[this.MAP_ROLE_PARENT], this.id.render.mapRoleParent);
+                    this.renderMapRoleParent(this.uniAclConfig[this.MAP_ROLE_PARENT],
+                        this.id.render.sampleRoleParentRow, this.id.render.actionDivSample,
+                        this.id.render.mapRoleParent);
+//                    this.renderBtnForUserAction(this.id.render.actionDivSample, this.id.render.userAction);
                     /**
                      * render role controller action on selected
                      */
@@ -181,6 +189,8 @@
 
                     this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: false},
                         this.id.render.modalBodyControllerAction);
+
+                    this.renderUserAction();
                 },
 
                 bindEventHandler: function(){
@@ -222,14 +232,10 @@
                     });
                 },
 
-                renderMapRoleParent: function(data, divId){
+                renderMapRoleParent: function(data, sampleRoleParentRowId, divIdActionDivSample, divId){
 //                    console.log(data);
-                    var sampleRoleRow = $(
-                        "<li>" +
-                        "<input type='text' readonly name='role'>" +
-                        "<input type='text' readonly name='parentRole'>" +
-                        "<button class='btn btn-primary allowedAction' data-container='body' data-toggle='tooltip' data-placement='right'>action </button>" +
-                        "</li>");
+                    var ad = this;
+                    var sampleRoleRow = $("#" + sampleRoleParentRowId);
                     var containerDiv = $("#" + divId);
                     for(var role in data){
                         if(data.hasOwnProperty(role)){
@@ -237,10 +243,19 @@
                             row.css({display: 'block'});
                             row.find("input[name='role']").val(role);
                             row.find("input[name='parentRole']").val(data[role]);
+                            row.find("button").addClass(ad.id.render.userAction);
 //                            console.log(row);
                             containerDiv.append(row);
                         }
                     }
+                    //bind tooltip for each span "gly cog"
+                    var actionDivSample = $("#" + divIdActionDivSample);
+//                    var actionDiv = actionDivSample.clone();
+//                    actionDiv.css({display: 'inline'});
+                    $("." + ad.id.render.userAction).tooltip({
+                        html: true,
+                        title: actionDivSample
+                    });
                 },
 
                 renderTreeView: function(data, checkedOption, divId){
@@ -270,6 +285,18 @@
                         }
                     }
                     $("#" + divId).append(select);
+                },
+
+                renderUserAction: function(){
+                    $(".btnadd").css({display: 'none'});
+                    $(".btnedit").css({display: 'none'});
+                    $(".btndelete").css({display: 'none'});
+
+                    for(var key in this.userAction){
+                        if(this.userAction.hasOwnProperty(key)){
+                            $(".btn" + this.userAction[key]).css({display: 'inline'});
+                        }
+                    }
                 },
 
                 buildTreeData: function(data, checkedOption){
@@ -343,9 +370,11 @@
                     result["notInherit"] = mapRoleSpecial;
                     return result;
                 },
+
                 ajaxCall: function(result, action){
                     var ad = this;
                     var resultJsonString = JSON.stringify(result);
+//                    console.log(result);
                     console.log(resultJsonString);
                     var formData = new FormData();
                     formData.append("userAction", action);
@@ -356,6 +385,7 @@
                     oReq.send(formData);
                     oReq.onload = function(){
                         var res = oReq.response;
+//                        console.log(res);
                         var resJsonObj = JSON.parse(res);
                         console.log(resJsonObj);
                         ad.uniAclConfig = resJsonObj["info"];
@@ -365,7 +395,7 @@
             };
             var idCollection = {
                 data: {
-                    userActionRole: "userActionOnRole",
+                    userAction: "userAction",
                     allRoles: "allRoles",
                     uniAclConfig: "uniAclConfig"
                 },
@@ -377,7 +407,10 @@
                     allRoles: "allRoles_1",
                     allControllerAction: "allControllerAction",
                     modalControllerAction: "modalControllerAction",
-                    modalBodyControllerAction: "modalBodyControllerAction"
+                    modalBodyControllerAction: "modalBodyControllerAction",
+                    userAction: "userAction",
+                    sampleRoleParentRow: "sampleRoleParentRow",
+                    actionDivSample: "actionDivSample"
                 },
                 event: {
                     btnSaveMapRoleWhere: "btnSaveMapRoleWhere",

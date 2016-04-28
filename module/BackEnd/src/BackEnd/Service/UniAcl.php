@@ -638,7 +638,7 @@ class UniAcl{
                 $role = "user_id_" . $user["id"];
             }
             if($this->userSpecialAcl->hasRole($role)){
-                if($this->userSpecialAcl->isAllowed($user["id"], $controller, $action)){
+                if($this->userSpecialAcl->isAllowed($role, $controller, $action)){
                     return true;
                 }
             }

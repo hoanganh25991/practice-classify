@@ -33,10 +33,7 @@ class AclTable{
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
 
-        $select->columns(array("*"))->from(self::TABLE)->order(array(
-            "id",
-            "DESC"
-        ))->limit(1);
+        $select->columns(array("*"))->from(self::TABLE)->order('id DESC')->limit(1);
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();

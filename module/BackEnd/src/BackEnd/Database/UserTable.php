@@ -38,7 +38,7 @@ class UserTable{
         $result = $statement->execute();
         /** @var array $resultArray */
         $resultArray = ArrayUtils::iteratorToArray($result);
-        $user = false;
+        $user = array();
         if(count($resultArray) > 0){
             $user = $resultArray[0];
         }
@@ -67,5 +67,21 @@ class UserTable{
             return true;
         }
         return false;
+    }
+
+
+    public function getAll(){
+        $sql = new Sql($this->dbAdapter);
+        $select = $sql->select();
+        $select->from(self::TABLE);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $result = $statement->execute();
+        /** @var array $resultArray */
+        $resultArray = ArrayUtils::iteratorToArray($result);
+        $user = array();
+        if(count($resultArray) > 0){
+            $user = $resultArray;
+        }
+        return $user;
     }
 }
