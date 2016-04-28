@@ -1,12 +1,8 @@
 ﻿<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
 <script src="/js/JSON.prune.js"></script>
-<h3><?php var_dump($this->_vars); ?></h3>
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
-<input type="hidden" id="inheritRole" value='<?php echo json_encode($this->inheritRole); ?>'>
 <input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
-<input type="hidden" id="allControllerAction" value='<?php echo json_encode($this->allControllerAction); ?>'>
-<input type="hidden" id="mapRoleWhere" value='<?php echo json_encode($this->mapRoleWhere); ?>'>
 
 <li id="sampleRoleRow" style="display: none;">
     <input type="text" readonly name="inheritRole">
@@ -27,7 +23,7 @@
                 </div>
                 <div id="rolePanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <p>hien thi thong tin ve inherit-role</p>
+                        <p>hien thi thong tin ve map role parent</p>
                         <div id="inheritRoleShow"></div>
                     </div>
                 </div>
@@ -35,22 +31,24 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map
-                        role where
+                        role controller action
                     </div>
                 </div>
                 <div id="mapPanelBody" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <p>common</p>
-                        <p>special (no inherit)</p>
                         <div id="mapRoleWhereShow">
                             <div id="selectContainer"></div>
-                            <h3>INHERIT</h3>
-                            <button class="btn btn-primary" id="btnAddControllerAction">add</button>
+                            <div>
+                                <span class="h3">inherit</span>
+                                <button class="btn btn-default" id="btnAddControllerAction">add</button>
+                            </div>
                             <div id="mapRoleWhereInherit"></div>
-                            <h3>NOT INHERIT</h3>
-                            <button class="btn btn-primary" id="btnAddSpecial">add</button>
+                            <div>
+                                <span class="h3">not inherit</span>
+                                <button class="btn btn-default" id="btnAddSpecial">add</button>
+                            </div>
                             <div id="mapRoleWhereNotInherit"></div>
-                            <button id="btnMapRoleWhere" class="btn btn-primary">save change</button>
+                            <button id="btnMapRoleWhere" class="btn btn-success">save</button>
                         </div>
                     </div>
                 </div>
@@ -107,7 +105,45 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script>
+    (function(){
+        $(document).ready(function(){
+            var AdminRoleView = function(divIdUserActionOnRole, divIdAllRoles, divIduniAclConfig){
+                const MAP_ROLE_PARENT = "MAP_ROLE_PARENT";
+                const CONTROLLER_ACTION = "CONTROLLER_ACTION";
+                const ROLE = "ROLE";
+                const INHERIT = "INHERIT";
+                const NOT_INHERIT = "NOT_INHERIT";
+                const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
+                const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
 
+                this.userActionOnRole = JSON.parse($("#" + divIdUserActionOnRole.val());
+                this.allRoles = JSON.parse($("#" + divIdAllRoles).val());
+                this.uniAclConfig = JSON.parse($("#" + divIduniAclConfig).val());
+            };
+            AdminRoleView.prototype = {
+                MAP_ROLE_PARENT: "MAP_ROLE_PARENT",
+                CONTROLLER_ACTION: "CONTROLLER_ACTION",
+                ROLE: "ROLE",
+                INHERIT: "INHERIT",
+                NOT_INHERIT: "NOT_INHERIT",
+                MAP_ROLE_CONTROLLER_ACTION: "MAP_ROLE_CONTROLLER_ACTION",
+                MAP_ROLE_SPECIAL: "MAP_ROLE_SPECIAL",
+
+
+                render: function(){
+                    var x = this.uniAclConfig;
+                    var mapRoleParent = this.uniAclConfig[this.MAP_ROLE_PARENT];
+                    renderMapRoleParent(mapRoleParent, "");
+
+                }
+            };
+            var adminRoleView = new AdminRoleView("userActionOnRole", "allRoles", "uniAclConfig");
+            f.init();
+//            f.render();
+        });
+    })(jQuery);
+</script>
 <script>
     (function($){
         $(document).ready(function(){
