@@ -19,7 +19,7 @@ use Zend\Permissions\Acl\Acl;
  */
 class UniAcl{
     const CONFIG = "UNI_ACL_CONFIG";
-    const MAP_ROLE_PARENT = "ROLE_PARENT";
+    const MAP_ROLE_PARENT = "MAP_ROLE_PARENT";
     const CONTROLLER_ACTION = "CONTROLLER_ACTION";
     const ACTION = "ACTION";
     const SPECIAL = "SPECIAL";
@@ -714,6 +714,7 @@ class UniAcl{
             $result = $this->filterArrayWhereRoleAllowed($this->cA, $role, $this->userSpecialAcl);
             $this->tempConfig[self::MAP_USER_SPECIAL][$role] = $result;
         }
+//        $this->config = $this->tempConfig;
         return $this->tempConfig;
     }
 
@@ -877,6 +878,14 @@ class UniAcl{
                 }
             }
         }
+        return $result;
+    }
+
+    public function getConfigForUI(){
+        $result = $this->config;
+        $mapRoleWhere = $this->getRoleWhere();
+        $result[self::MAP_ROLE_CONTROLLER_ACTION] = $mapRoleWhere[self::MAP_ROLE_CONTROLLER_ACTION];
+        $result[self::MAP_ROLE_SPECIAL] = $mapRoleWhere[self::MAP_ROLE_SPECIAL];
         return $result;
     }
 

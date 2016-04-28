@@ -83,15 +83,16 @@ class RoleController extends AbstractActionController{
         //                "controller" => null,
         //            )
         //        ),
-        $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
+//        $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
         //        $view->setVariable("guest", $uniAcl->getWhereOnRole("guest"));
         //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
-        $view->setVariable("uniAclConfig", $uniAclConfig);
+//        $reBuildConfig = $uniAcl->buildConfig();
+        $view->setVariable("uniAclConfig", $uniAcl->getConfigForUI());
         $view->setVariable("userActionOnRole", $userActionOnRole);
-        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
+//        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
         $view->setVariable("allRoles", $uniAcl->getAllRoles());
-        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
-        $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
+//        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
+//        $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
 
         return $view;
     }
@@ -146,7 +147,7 @@ class RoleController extends AbstractActionController{
             //            var_dump($data, $userAction);
             $view = new JsonModel();
             //            $view = new ViewModel();
-            $view->setVariable("info", $newConfig);
+            $view->setVariable("info", $uniAcl->getConfigForUI());
             //            $json = [1 => "2", "3" => "vkl"];
             //            $view->setVariable("a", $json);
             return $view;

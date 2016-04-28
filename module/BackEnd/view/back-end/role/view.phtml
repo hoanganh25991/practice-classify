@@ -12,78 +12,78 @@
     </button>
 </li>
 
-<div class="row">
-    <div class="col-md-8">
-        <div class="panel-group" id="panelParent">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">
-                        role
-                    </div>
-                </div>
-                <div id="rolePanelBody" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <p>hien thi thong tin ve map role parent</p>
-                        <div id="inheritRoleShow"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map
-                        role controller action
-                    </div>
-                </div>
-                <div id="mapPanelBody" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <div id="mapRoleWhereShow">
-                            <div id="selectContainer"></div>
-                            <div>
-                                <span class="h3">inherit</span>
-                                <button class="btn btn-default" id="btnAddControllerAction">add</button>
-                            </div>
-                            <div id="mapRoleWhereInherit"></div>
-                            <div>
-                                <span class="h3">not inherit</span>
-                                <button class="btn btn-default" id="btnAddSpecial">add</button>
-                            </div>
-                            <div id="mapRoleWhereNotInherit"></div>
-                            <button id="btnMapRoleWhere" class="btn btn-success">save</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">
-                        all roles
-                    </div>
-                </div>
-                <div id="allRolePanelBody" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <p>hien thi tat cac role</p>
-                        <div id="allRolesShow"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse"
-                         href="#controllerActionPanelBody">controller
-                        action
-                    </div>
-                </div>
-                <div id="controllerActionPanelBody" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        <p>hien thi tat cac controller action</p>
-                        <div id="allControllerActionShow"></div>
-                        <div id="save"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="row">-->
+<!--    <div class="col-md-8">-->
+<!--        <div class="panel-group" id="panelParent">-->
+<!--            <div class="panel panel-default">-->
+<!--                <div class="panel-heading">-->
+<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">-->
+<!--                        role-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div id="rolePanelBody" class="panel-collapse collapse">-->
+<!--                    <div class="panel-body">-->
+<!--                        <p>hien thi thong tin ve map role parent</p>-->
+<!--                        <div id="inheritRoleShow"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="panel panel-default">-->
+<!--                <div class="panel-heading">-->
+<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map-->
+<!--                        role controller action-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div id="mapPanelBody" class="panel-collapse collapse">-->
+<!--                    <div class="panel-body">-->
+<!--                        <div id="mapRoleWhereShow">-->
+<!--                            <div id="selectContainer"></div>-->
+<!--                            <div>-->
+<!--                                <span class="h3">inherit</span>-->
+<!--                                <button class="btn btn-default" id="btnAddControllerAction">add</button>-->
+<!--                            </div>-->
+<!--                            <div id="mapRoleWhereInherit"></div>-->
+<!--                            <div>-->
+<!--                                <span class="h3">not inherit</span>-->
+<!--                                <button class="btn btn-default" id="btnAddSpecial">add</button>-->
+<!--                            </div>-->
+<!--                            <div id="mapRoleWhereNotInherit"></div>-->
+<!--                            <button id="btnMapRoleWhere" class="btn btn-success">save</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="panel panel-default">-->
+<!--                <div class="panel-heading">-->
+<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">-->
+<!--                        all roles-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div id="allRolePanelBody" class="panel-collapse collapse">-->
+<!--                    <div class="panel-body">-->
+<!--                        <p>hien thi tat cac role</p>-->
+<!--                        <div id="allRolesShow"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="panel panel-default">-->
+<!--                <div class="panel-heading">-->
+<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse"-->
+<!--                         href="#controllerActionPanelBody">controller-->
+<!--                        action-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div id="controllerActionPanelBody" class="panel-collapse collapse">-->
+<!--                    <div class="panel-body">-->
+<!--                        <p>hien thi tat cac controller action</p>-->
+<!--                        <div id="allControllerActionShow"></div>-->
+<!--                        <div id="save"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 <div class="modal fade" tabindex="-1" role="dialog" id="modalControllerAction">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -93,33 +93,55 @@
                 <h4 class="modal-title">all controller action</h4>
             </div>
             <div class="modal-body">
-                <p>One fine body&hellip;</p>
-                <div>
-                    <div id="controllerActionShow"></div>
-                </div>
+                <div id="modalBodyControllerAction"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="btnSaveAddControllerAction">Save changes</button>
+                <button type="button" class="btn btn-primary" id="btnSaveModalControllerAction">Save changes</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<div id="mapRoleParent">
+    <h3>mapRoleParent</h3>
+</div>
+<div>
+    <div>
+        <div id="roleSelectPicker">
+            <h3>roleSelectPicker</h3>
+        </div>
+        <div>
+            <span class="h3">mapRoleControllerAction</span>
+            <span class="btn btn-default" data-toggle="modal" data-target="#modalControllerAction"
+                  id="btnAddControllerAction">add
+            </span>
+        </div>
+
+        <div id="mapRoleControllerAction"></div>
+        <div>
+            <span class="h3">mapRoleSpecial</span>
+            <span class="btn btn-default" data-toggle="modal" data-target="#modalControllerAction"
+                  id="btnAddSpecial">add</span>
+        </div>
+        <div id="mapRoleSpecial"></div>
+
+    </div>
+    <button class="btn btn-default" id="btnSaveMapRoleWhere">save</button>
+</div>
+
+<div id="allRoles_1">
+    <h3>allRoles</h3>
+</div>
+<h3>allControllerAction</h3>
+<div id="allControllerAction"></div>
 <script>
     (function(){
         $(document).ready(function(){
-            var AdminRoleView = function(divIdUserActionOnRole, divIdAllRoles, divIduniAclConfig){
-                const MAP_ROLE_PARENT = "MAP_ROLE_PARENT";
-                const CONTROLLER_ACTION = "CONTROLLER_ACTION";
-                const ROLE = "ROLE";
-                const INHERIT = "INHERIT";
-                const NOT_INHERIT = "NOT_INHERIT";
-                const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
-                const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
-
-                this.userActionOnRole = JSON.parse($("#" + divIdUserActionOnRole.val());
-                this.allRoles = JSON.parse($("#" + divIdAllRoles).val());
-                this.uniAclConfig = JSON.parse($("#" + divIduniAclConfig).val());
+            window.AdminRoleView = function(idCollection){
+                this.id = idCollection;
+                this.userActionOnRole = JSON.parse($("#" + this.id.data.userActionRole).val());
+                this.allRoles = JSON.parse($("#" + this.id.data.allRoles).val());
+                this.uniAclConfig = JSON.parse($("#" + this.id.data.uniAclConfig).val());
             };
             AdminRoleView.prototype = {
                 MAP_ROLE_PARENT: "MAP_ROLE_PARENT",
@@ -132,281 +154,247 @@
 
 
                 render: function(){
-                    var x = this.uniAclConfig;
-                    var mapRoleParent = this.uniAclConfig[this.MAP_ROLE_PARENT];
-                    renderMapRoleParent(mapRoleParent, "");
+                    console.log(this.uniAclConfig);
+                    this.renderMapRoleParent(this.uniAclConfig[this.MAP_ROLE_PARENT], this.id.render.mapRoleParent);
+                    /**
+                     * render role controller action on selected
+                     */
+                    this.renderAllRoles(this.allRoles, this.id.render.roleSelectPicker);
+                    var ad = this;
+                    $("#" + this.id.render.roleSelectPicker).on("change", function(){
+                        var roleSelected = $(this).find("option:checked").val();
+                        ad.renderTreeView(ad.uniAclConfig[ad.MAP_ROLE_CONTROLLER_ACTION][roleSelected],
+                            {checked: true},
+                            ad.id.render.mapRoleControllerAction);
 
+                        ad.renderTreeView(ad.uniAclConfig[ad.MAP_ROLE_SPECIAL][roleSelected], {checked: true},
+                            ad.id.render.mapRoleSpecial);
+                    });
+
+                    this.renderAllRoles(this.allRoles, this.id.render.allRoles);
+
+                    this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: false},
+                        this.id.render.allControllerAction);
+
+                    this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: true},
+                        this.id.render.modalBodyControllerAction);
+                },
+
+                bindEventHandler: function(){
+                    var ad = this;
+                    $("#" + ad.id.event.btnSaveMapRoleWhere).on("click", function(){
+                        var result = ad.buildObjectToSend(ad.id.render.roleSelectPicker,
+                            ad.id.render.mapRoleControllerAction,
+                            ad.id.render.mapRoleSpecial);
+                        ad.ajaxCall(result, "deny");
+                    });
+
+                    /**
+                     * how to composit 3 listener come together
+                     */
+                    var where = {controllerAction: "", special: ""};
+                    //1
+                    $("#" + ad.id.event.btnSaveModalControllerAction).on("click", function(){
+                        $("#" + ad.id.render.modalControllerAction).modal("hide");
+                        var result = ad.buildObjectToSend(ad.id.render.roleSelectPicker, where.controllerAction,
+                            where.special);
+                        ad.ajaxCall(result, "allow");
+//                        $("#" + ad.id.render.modalBodyControllerAction).modal("hide");
+                    });
+                    //2
+                    $("#" + ad.id.event.btnAddControllerAction).on("click", function(){
+//                        console.log("add");
+                        where.controllerAction = ad.id.render.modalBodyControllerAction;
+                        where.special = "";
+                        console.log(where);
+//                        $("#" + ad.id.render.modalBodyControllerAction).modal("show");
+                    });
+                    //3
+                    $("#" + ad.id.event.btnAddSpecial).on("click", function(){
+//                        console.log("add");
+                        where.controllerAction = "";
+                        where.special = ad.id.render.modalBodyControllerAction;
+                        console.log(where);
+//                        $("#" + ad.id.render.modalControllerAction).modal("show");
+                    });
+                },
+
+                renderMapRoleParent: function(data, divId){
+//                    console.log(data);
+                    var sampleRoleRow = $(
+                        "<li>" +
+                        "<input type='text' readonly name='role'>" +
+                        "<input type='text' readonly name='parentRole'>" +
+                        "<button class='btn btn-primary allowedAction' data-container='body' data-toggle='tooltip' data-placement='right'>action </button>" +
+                        "</li>");
+                    var containerDiv = $("#" + divId);
+                    for(var role in data){
+                        if(data.hasOwnProperty(role)){
+                            var row = sampleRoleRow.clone();
+                            row.css({display: 'block'});
+                            row.find("input[name='role']").val(role);
+                            row.find("input[name='parentRole']").val(data[role]);
+//                            console.log(row);
+                            containerDiv.append(row);
+                        }
+                    }
+                },
+
+                renderTreeView: function(data, checkedOption, divId){
+                    var treeData = this.buildTreeData(data, checkedOption);
+                    $("#" + divId).empty();
+                    YUI().use('aui-tree-view', function(Y){
+                            new Y.TreeView({boundingBox: "#" + divId, children: treeData}).render();
+                        }
+                    );
+                },
+
+                renderAllRoles: function(data, divId){
+                    //            <select class="selectpicker">
+                    //                <option>Mustard</option>
+                    //                <option>Ketchup</option>
+                    //                <option>Relish</option>
+                    //            </select>
+                    var select = $('<select class="selectpicker">');
+                    var optionSample = $("<option>");
+                    //when loop for i++, means key just number
+                    //sometimes key in array like php has info
+                    //for(var key in array){ do sth}
+                    for(var key in data){
+                        if(data.hasOwnProperty(key)){
+                            var option = optionSample.clone();
+                            option.html(data[key]);
+                            select.append(option);
+                        }
+                    }
+                    $("#" + divId).append(select);
+                },
+                buildTreeData: function(data, checkedOption){
+                    var treeData = [];
+                    for(var controller in data){
+                        if(data.hasOwnProperty(controller)){
+                            var actionData = [];
+                            //build each controller as node
+                            treeData.push({
+                                children: actionData,
+                                expanded: true,
+                                label: controller,
+                                type: 'task',
+                                checked: checkedOption.checked
+                            });
+
+                            //build actionData, into controller as child-node
+                            var actionArray = data[controller];
+                            for(var key in actionArray){
+                                if(actionArray.hasOwnProperty(key)){
+                                    actionData.push({
+                                        label: actionArray[key],
+                                        leaf: true,
+                                        type: 'task',
+                                        checked: checkedOption.checked
+                                    })
+                                }
+                            }
+//                            for(var i = 0; i < actionArray.length; i++){
+//                                actionData.push({
+//                                    label: actionArray[i],
+//                                    leaf: true,
+//                                    type: 'task',
+//                                    checked: checkedOption.checked
+//                                })
+//                            }
+                        }
+                    }
+                    return treeData;
+                },
+
+                getTreeData: function(ul, store){
+                    var liArray = ul.children("li");
+                    /** @warn for each not work as expected of recursive*/
+                    for(var i = 0; i < liArray.length; i++){
+                        var li = $(liArray[i]);
+                        var contentDiv = li.children("div");
+                        var containerUl = li.children("ul");
+                        if(contentDiv.hasClass("tree-node-checked")){
+                            var label = contentDiv.children(".tree-label").html();
+                            /** @warn handle different on controller|action */
+                            if(containerUl.children("li").length > 0){
+                                store[label] = [];
+                                this.getTreeData(containerUl, store[label]);
+                            }else{
+                                store.push(label);
+                            }
+                        }
+                    }
+                },
+
+                buildObjectToSend: function(divIdRoleSelectPicker, divIdMapRoleCA, divIdMapRoleSpecial){
+                    var result = {};
+                    var mapRoleControllerAction = {};
+                    if(divIdMapRoleCA){
+                        this.getTreeData($("#" + divIdMapRoleCA).children("ul"), mapRoleControllerAction);
+                    }
+                    var mapRoleSpecial = {};
+                    if(divIdMapRoleCA){
+                        this.getTreeData($("#" + divIdMapRoleSpecial).children("ul"), mapRoleSpecial);
+                    }
+                    var selectDiv = $("#" + divIdRoleSelectPicker).find("select");
+                    /** explicit try on first child */
+                    if(selectDiv.length > 0){
+                        selectDiv = $(selectDiv[0]);
+                    }
+                    result["role"] = selectDiv.find("option:selected").val();
+                    result["inherit"] = mapRoleControllerAction;
+                    result["notInherit"] = mapRoleSpecial;
+                    return result;
+                },
+                ajaxCall: function(result, action){
+                    var ad = this;
+                    var resultJsonString = JSON.stringify(result);
+                    console.log(resultJsonString);
+                    var formData = new FormData();
+                    formData.append("userAction", action);
+                    formData.append("data", resultJsonString);
+                    var oReq = new XMLHttpRequest();
+                    var url = "/admin/role/edit";
+                    oReq.open("post", url);
+                    oReq.send(formData);
+                    oReq.onload = function(){
+                        var res = oReq.response;
+                        var resJsonObj = JSON.parse(res);
+                        console.log(resJsonObj);
+                        ad.uniAclConfig = resJsonObj["info"];
+                    };
                 }
             };
-            var adminRoleView = new AdminRoleView("userActionOnRole", "allRoles", "uniAclConfig");
-            f.init();
-//            f.render();
+            var idCollection = {
+                data: {
+                    userActionRole: "userActionOnRole",
+                    allRoles: "allRoles",
+                    uniAclConfig: "uniAclConfig"
+                },
+                render: {
+                    mapRoleParent: "mapRoleParent",
+                    roleSelectPicker: "roleSelectPicker",
+                    mapRoleControllerAction: "mapRoleControllerAction",
+                    mapRoleSpecial: "mapRoleSpecial",
+                    allRoles: "allRoles_1",
+                    allControllerAction: "allControllerAction",
+                    modalControllerAction: "modalControllerAction",
+                    modalBodyControllerAction: "modalBodyControllerAction"
+                },
+                event: {
+                    btnSaveMapRoleWhere: "btnSaveMapRoleWhere",
+                    btnAddControllerAction: "btnAddControllerAction",
+                    btnAddSpecial: "btnAddSpecial",
+                    btnSaveModalControllerAction: "btnSaveModalControllerAction"
+                }
+            };
+            var adminRoleView = new AdminRoleView(idCollection);
+            adminRoleView.render();
+            adminRoleView.bindEventHandler();
         });
     })(jQuery);
 </script>
-<script>
-    (function($){
-        $(document).ready(function(){
-            const CONTROLLER_ACTION = "CONTROLLER_ACTION";
-            const ROLE = "ROLE";
-            const INHERIT = "INHERIT";
-            const NOT_INHERIT = "NOT_INHERIT";
-            const MAP_ROLE_CONTROLLER_ACTION = "MAP_ROLE_CONTROLLER_ACTION";
-            const MAP_ROLE_SPECIAL = "MAP_ROLE_SPECIAL";
-            /**
-             * READ CONFIG from server
-             */
-//            console.log($("#uniAclConfig").val());
-//            var uniAclConfig = JSON.parse($("#uniAclConfig").val());
-//            console.log(uniAclConfig);
-            var userActionOnRole = JSON.parse($("#userActionOnRole").val());
 
-            var allRoles = JSON.parse($("#allRoles").val());
-            /**
-             * load ROLE
-             */
-            var inheritRole = JSON.parse($("#inheritRole").val());
-            renderInheritRole(inheritRole, $("#inheritRoleShow"));
-            /**
-             * map ROLE WHERE
-             */
-            var mapRoleWhere = JSON.parse($("#mapRoleWhere").val());
-            var selectContainer = $("#selectContainer");
-            renderAllRoles(allRoles, selectContainer);
-            //bind event on select
-            selectContainer.children("select").on("change", function(){
-                var optionSelected = $(this).children("option:selected");
-                var role = optionSelected.val();
-                console.log(role);
-//                var s = buildTreeData(mapRoleWhere[role][INHERIT]);
-//                console.log(s);
-                //clean div container treeview
-                $("#mapRoleWhereInherit").empty();
-                $("#mapRoleWhereNotInherit").empty();
-                renderTree(mapRoleWhere[MAP_ROLE_CONTROLLER_ACTION][role], "#mapRoleWhereInherit");
-                renderTree(mapRoleWhere[MAP_ROLE_SPECIAL][role], "#mapRoleWhereNotInherit");
-//                buildObjectToSend();
-                console.log(mapRoleWhere);
-
-            });
-
-            /**
-             * ALL ROLES
-             */
-            /** @warn allRoles at first line */
-            renderAllRoles(allRoles, $("#allRolesShow"));
-            /**
-             * ALL CONTROLLER ACTION
-             */
-            var allControllerAction = JSON.parse($("#allControllerAction").val());
-//            console.log(allControllerAction);
-            renderTree(allControllerAction, "#allControllerActionShow");
-            $("#scan").on("click", function(){
-                var ul = $("#adminControllerAction").children("ul");
-                var treeData = {};
-                getTreeData(ul, treeData);
-                console.log(treeData);
-            });
-
-            $("#btnMapRoleWhere").on("click", function(){
-//                getTreeData()
-//                var a = {};
-//                console.log($("#mapRoleWhereInherit").children("ul"));
-//                getTreeData($("#mapRoleWhereInherit").children("ul"), a);
-                var result = buildObjectToSend("mapRoleWhereInherit", "mapRoleWhereNotInherit");
-//                console.log(result);
-//                var inheritX = result.editor.INHERIT;
-//                console.log(inheritX);
-//                console.log(JSON.stringify(inheritX));
-                /**
-                 * ajax push to /admin/role/edit
-                 */
-                /** @warn JSON stringify not work on DEEP object */
-//                var x = result.editor[0];
-//                console.log(JSON.stringify(x));
-                ajaxCall(result, "deny", mapRoleWhere);
-//                console.log(mapRoleWhere);
-            });
-
-            $("#btnAddControllerAction").on("click", function(){
-                /**
-                 * build data, render tree, append to
-                 */
-                $("#controllerActionShow").empty();
-                renderTree(allControllerAction, "#controllerActionShow");
-
-                $("#modalControllerAction").modal("show");
-            });
-
-            $("#btnAddSpecial").on("click", function(){
-                $("#controllerActionShow").empty();
-                renderTree(allControllerAction, "#controllerActionShow");
-
-                $("#modalControllerAction").modal("show");
-            });
-
-            $("#btnSaveAddControllerAction").on("click", function(){
-//                var mapInherit = {};
-//                getTreeData($("#controllerActionShow").children("ul"), mapInherit);
-//                console.log(mapInherit);
-                var result = buildObjectToSend("controllerActionShow", "khongco");
-//                console.log(result);
-                ajaxCall(result, "allow", mapRoleWhere);
-            });
-
-        });
-    })(jQuery);
-
-    function buildTreeData(controllerAction){
-        var treeData = [];
-        for(var controller in controllerAction){
-            if(controllerAction.hasOwnProperty(controller)){
-                var actionData = [];
-                //build each controller as node
-                treeData.push({
-                    children: actionData,
-                    expanded: true,
-                    label: controller,
-                    type: 'task',
-                    checked: true
-                });
-
-                //build actionData, into controller as child-node
-                var actionArray = controllerAction[controller];
-                for(var i = 0; i < actionArray.length; i++){
-                    actionData.push({
-                        label: actionArray[i],
-                        leaf: true,
-                        type: 'task',
-                        checked: true
-                    })
-                }
-            }
-        }
-        return treeData;
-    }
-
-    function getTreeData(ul, store){
-        var liArray = ul.children("li");
-        /** @warn for each not work as expected of recursive*/
-        for(var i = 0; i < liArray.length; i++){
-            var li = $(liArray[i]);
-            var contentDiv = li.children("div");
-            var containerUl = li.children("ul");
-            if(contentDiv.hasClass("tree-node-checked")){
-                var label = contentDiv.children(".tree-label").html();
-//                console.log(label);
-                /** @warn handle different on controller|action */
-                if(containerUl.children("li").length > 0){
-                    store[label] = [];
-                    getTreeData(containerUl, store[label]);
-                }else{
-                    store.push(label);
-                }
-
-            }
-        }
-    }
-
-    function renderTree(controllerAction, containerDivId){
-        var treeData = buildTreeData(controllerAction);
-        YUI().use('aui-tree-view', function(Y){
-                new Y.TreeView({boundingBox: containerDivId, children: treeData}).render();
-            }
-        );
-    }
-
-    function renderInheritRole(inheritRole, containerDiv){
-        var sampleRoleRow = $("#sampleRoleRow");
-        for(var inherit in inheritRole){
-            if(inheritRole.hasOwnProperty(inherit)){
-                var row = sampleRoleRow.clone();
-                row.css({display: 'block'});
-                row.find("input[name='inheritRole']").val(inherit);
-                row.find("input[name='parentRole']").val(inheritRole[inherit]);
-                containerDiv.append(row);
-            }
-        }
-    }
-
-    function renderAllRoles(allRoles, containerDiv){
-//            <select class="selectpicker">
-//                <option>Mustard</option>
-//                <option>Ketchup</option>
-//                <option>Relish</option>
-//            </select>
-        var select = $('<select class="selectpicker">');
-        var optionSample = $("<option>");
-        //when loop for i++, means key just number
-        //sometimes key in array like php has info
-        //for(var key in array){ do sth}
-        for(var i = 0; i < allRoles.length; i++){
-            var option = optionSample.clone();
-            option.html(allRoles[i]);
-            select.append(option);
-        }
-        containerDiv.append(select);
-    }
-
-    function renderRoleWhere(){
-        /**
-         * CONTROLLER ACTION
-         */
-
-        /**
-         * SPECIAL, not inherit
-         */
-    }
-
-    function buildObjectToSend(mapInheritId, mapNotInheritId){
-        var result = {};
-        var mapRoleWhereInherit = {};
-        if(mapInheritId){
-            getTreeData($("#" + mapInheritId).children("ul"), mapRoleWhereInherit);
-        }
-//        console.log(mapRoleWhereInherit);
-        var mapRoleWhereNotInherit = {};
-        if(mapInheritId){
-            getTreeData($("#" + mapNotInheritId).children("ul"), mapRoleWhereNotInherit);
-        }
-        var selectDiv = $("#selectContainer").find("select");
-        /** explicit try on first child */
-        if(selectDiv.length > 0){
-            selectDiv = $(selectDiv[0]);
-        }
-
-        result["role"] = selectDiv.find("option:selected").val();
-        result["inherit"] = mapRoleWhereInherit;
-        result["notInherit"] = mapRoleWhereNotInherit;
-
-//        console.log(result);
-        return result;
-    }
-
-    function ajaxCall(result, action, mapRoleWhere){
-        var resultJsonString = JSON.stringify(result);
-        console.log(resultJsonString);
-        var formData = new FormData();
-        formData.append("userAction", action);
-        formData.append("data", resultJsonString);
-        var oReq = new XMLHttpRequest();
-        var url = "/admin/role/edit";
-        oReq.open("post", url);
-        oReq.send(formData);
-        oReq.onload = function(e){
-            var res = oReq.response;
-//                    console.log(res);
-            var resJsonObj = JSON.parse(res);
-            console.log(resJsonObj);
-//                    console.log(resJsonObj.info);
-//                    var data = JSON.parse(resJsonObj.info);
-//                    console.log(resJsonObj);
-//                    mapRoleWhere = data;
-            mapRoleWhere = resJsonObj["info"];
-//            console.log
-
-        };
-    }
-
-</script>
 
