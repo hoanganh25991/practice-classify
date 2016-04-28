@@ -34,6 +34,16 @@ return array(
                     ),
                 ),
             ),
+//            'keep/calm' => array(
+//                'type' => 'literal',
+//                'options' => array(
+//                    'route' => '/keep/calm',
+//                    'defaults' => array(
+//                        'controller' => 'FrontEnd\Controller\Keep',
+//                        'action' => 'calm',
+//                    ),
+//                ),
+//            ),
             'calm' => array(
                 'type' => 'literal',
                 'options' => array(

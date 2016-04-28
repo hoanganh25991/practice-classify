@@ -1,5 +1,6 @@
 ﻿<script src="http://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
 <script src="/js/JSON.prune.js"></script>
+<!--<script src="/js/watch-listen-to-object-change.js"></script>-->
 <input type="hidden" id="uniAclConfig" value='<?php echo json_encode($this->uniAclConfig); ?>'>
 <input type="hidden" id="userActionOnRole" value='<?php echo json_encode($this->userActionOnRole); ?>'>
 <input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
@@ -127,13 +128,15 @@
 
     </div>
     <button class="btn btn-default" id="btnSaveMapRoleWhere">save</button>
-</div>
-
+</div><!--map role where-->
 <div id="allRoles_1">
     <h3>allRoles</h3>
 </div>
-<h3>allControllerAction</h3>
-<div id="allControllerAction"></div>
+<div>
+    <h3>allControllerAction</h3>
+    <div id="allControllerAction"></div>
+    <button class="btn btn-default" id="btnRebuildControllerAction">rebuild</button>
+</div><!--all controller action-->
 <script>
     (function(){
         $(document).ready(function(){
@@ -176,7 +179,7 @@
                     this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: false},
                         this.id.render.allControllerAction);
 
-                    this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: true},
+                    this.renderTreeView(this.uniAclConfig[this.CONTROLLER_ACTION], {checked: false},
                         this.id.render.modalBodyControllerAction);
                 },
 
@@ -199,23 +202,23 @@
                         var result = ad.buildObjectToSend(ad.id.render.roleSelectPicker, where.controllerAction,
                             where.special);
                         ad.ajaxCall(result, "allow");
-//                        $("#" + ad.id.render.modalBodyControllerAction).modal("hide");
                     });
                     //2
                     $("#" + ad.id.event.btnAddControllerAction).on("click", function(){
-//                        console.log("add");
                         where.controllerAction = ad.id.render.modalBodyControllerAction;
                         where.special = "";
                         console.log(where);
-//                        $("#" + ad.id.render.modalBodyControllerAction).modal("show");
                     });
                     //3
                     $("#" + ad.id.event.btnAddSpecial).on("click", function(){
-//                        console.log("add");
                         where.controllerAction = "";
                         where.special = ad.id.render.modalBodyControllerAction;
                         console.log(where);
-//                        $("#" + ad.id.render.modalControllerAction).modal("show");
+                    });
+
+                    $("#" + ad.id.event.btnRebuildControllerAction).on("click", function(){
+                        var result = {};
+                        ad.ajaxCall(result, "rebuildControllerAction");
                     });
                 },
 
@@ -256,10 +259,9 @@
                     //                <option>Relish</option>
                     //            </select>
                     var select = $('<select class="selectpicker">');
+                    var optionBlank = $('<option selected disabled hidden style="display: none" value=""></option>');
+                    select.append(optionBlank);
                     var optionSample = $("<option>");
-                    //when loop for i++, means key just number
-                    //sometimes key in array like php has info
-                    //for(var key in array){ do sth}
                     for(var key in data){
                         if(data.hasOwnProperty(key)){
                             var option = optionSample.clone();
@@ -269,6 +271,7 @@
                     }
                     $("#" + divId).append(select);
                 },
+
                 buildTreeData: function(data, checkedOption){
                     var treeData = [];
                     for(var controller in data){
@@ -295,14 +298,6 @@
                                     })
                                 }
                             }
-//                            for(var i = 0; i < actionArray.length; i++){
-//                                actionData.push({
-//                                    label: actionArray[i],
-//                                    leaf: true,
-//                                    type: 'task',
-//                                    checked: checkedOption.checked
-//                                })
-//                            }
                         }
                     }
                     return treeData;
@@ -364,6 +359,7 @@
                         var resJsonObj = JSON.parse(res);
                         console.log(resJsonObj);
                         ad.uniAclConfig = resJsonObj["info"];
+//                        ad.render();
                     };
                 }
             };
@@ -387,7 +383,8 @@
                     btnSaveMapRoleWhere: "btnSaveMapRoleWhere",
                     btnAddControllerAction: "btnAddControllerAction",
                     btnAddSpecial: "btnAddSpecial",
-                    btnSaveModalControllerAction: "btnSaveModalControllerAction"
+                    btnSaveModalControllerAction: "btnSaveModalControllerAction",
+                    btnRebuildControllerAction: "btnRebuildControllerAction"
                 }
             };
             var adminRoleView = new AdminRoleView(idCollection);

@@ -7,4 +7,8 @@ class SpecialGiftController extends AbstractActionController{
     public function indexAction(){
         return new ViewModel(array('controller' => 'SpecialGiftController'));
     }
+
+//    public function indexAction(){
+//        return new ViewModel(array('controller' => 'SpecialGiftController'));
+//    }
 }

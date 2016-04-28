@@ -147,8 +147,11 @@ return array(
         'factories' => array(
             'Session' => 'BackEnd\Factory\SessionManagerFactory',
             'UniCache' => 'BackEnd\Factory\UniCacheFactory',
-            'UserTableQuery' => function($sm){
+            'UserTable' => function($sm){
                 return new \BackEnd\Database\UserTable($sm);
+            },
+            'AclTable' => function($sm){
+                return new \BackEnd\Database\AclTable($sm);
             },
             'UniAcl' => 'BackEnd\Factory\UniAclFactory',
 

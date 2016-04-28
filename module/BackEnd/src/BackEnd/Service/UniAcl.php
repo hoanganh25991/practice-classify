@@ -288,6 +288,26 @@ class UniAcl{
         }
     }
 
+    public function getControllerAction($config){
+        $uniAclConfig = array();
+        $controllerAction = array();
+        $routes = $config["router"]["routes"];
+        foreach($routes as $route){
+            $defaults = $route["options"]["defaults"];
+            $controllerAction[$defaults["controller"]][] = $defaults["action"];
+        }
+        $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
+        $this->config = $uniAclConfig;
+    }
+
+    public function setConfig($config){
+        $this->config = $config;
+    }
+
+    public function getConfig(){
+        return $this->config;
+    }
+
     /**
      * @param $role
      * @param $controller
@@ -714,7 +734,7 @@ class UniAcl{
             $result = $this->filterArrayWhereRoleAllowed($this->cA, $role, $this->userSpecialAcl);
             $this->tempConfig[self::MAP_USER_SPECIAL][$role] = $result;
         }
-//        $this->config = $this->tempConfig;
+        //        $this->config = $this->tempConfig;
         return $this->tempConfig;
     }
 

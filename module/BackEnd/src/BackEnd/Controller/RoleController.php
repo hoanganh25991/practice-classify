@@ -83,16 +83,16 @@ class RoleController extends AbstractActionController{
         //                "controller" => null,
         //            )
         //        ),
-//        $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
+        //        $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
         //        $view->setVariable("guest", $uniAcl->getWhereOnRole("guest"));
         //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
-//        $reBuildConfig = $uniAcl->buildConfig();
+        //        $reBuildConfig = $uniAcl->buildConfig();
         $view->setVariable("uniAclConfig", $uniAcl->getConfigForUI());
         $view->setVariable("userActionOnRole", $userActionOnRole);
-//        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
+        //        $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
         $view->setVariable("allRoles", $uniAcl->getAllRoles());
-//        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
-//        $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
+        //        $view->setVariable("allControllerAction", $uniAclConfig[UniAcl::CONTROLLER_ACTION]);
+        //        $view->setVariable("mapRoleWhere", $uniAcl->getRoleWhere());
 
         return $view;
     }
@@ -137,8 +137,25 @@ class RoleController extends AbstractActionController{
             if($userAction === "allow"){
                 $uniAcl->updateAllow($dataObj);
             }
+
+            if($userAction === "rebuildControllerAction"){
+                $config = $this->serviceManager->get("config");
+                $controllerAction = array();
+                $routes = $config["router"]["routes"];
+                foreach($routes as $route){
+                    $defaults = $route["options"]["defaults"];
+                    $controllerAction[$defaults["controller"]][] = $defaults["action"];
+                }
+                $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
+                $uniAcl->setConfig($uniAclConfig);
+            }
             $newConfig = $uniAcl->buildConfig();
             $cache->setArrayItem(UniAcl::CONFIG, $newConfig);
+            /**
+             * save into dabase
+             */
+            $aclTable = $this->serviceManager->get('AclTable');
+            $aclTable->insert($newConfig);
             /**
              * HANDLE data, ask some one for help
              */

@@ -76,6 +76,8 @@ class Module{
             $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
             $uniAclConfig = $tempConfig;
             $cache->setArrayItem(UniAcl::CONFIG, $tempConfig);
+            $aclTable = $serviceManager->get('AclTable');
+            $aclTable->insert($tempConfig);
         }
         /**
          * INIT ACL BY CONFIG
@@ -85,7 +87,7 @@ class Module{
         //        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         //        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
         //        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-//        $uniAcl->buildConfig();
+        //        $uniAcl->buildConfig();
         /**
          * GET USER FROM SESSION
          */
