@@ -17,7 +17,12 @@ class RoleController extends AbstractActionController{
 
     public function __construct($serviceManager){
         $this->serviceManager = $serviceManager;
-        $this->roleAction = array("view", "edit", "add", "delete");
+        $this->roleAction = array(
+            "view",
+            "edit",
+            "add",
+            "delete"
+        );
     }
 
     public function viewAction(){
@@ -33,9 +38,9 @@ class RoleController extends AbstractActionController{
              */
 
 
-//            var_dump($data, $userAction);
+            //            var_dump($data, $userAction);
             $view = new JsonModel();
-//            $view->setVariable("info", $data);
+            //            $view->setVariable("info", $data);
             return $view;
         }
         $view = new ViewModel();
@@ -67,20 +72,20 @@ class RoleController extends AbstractActionController{
                 $userActionOnRole[] = $action;
             }
         }
-//        $uniAclConfig["ROLE"] = array(
-//            "guest" => null,
-//            "editor" => "staff",
-//            "admin" => "editor"
-//        );
-//        $uniAclConfig["MAP_ROLE_CONTROLLER"] = array(
-//            "guest" => array(
-//                "FrontEnd\C" => array(action1, action2, action3),
-//                "controller" => null,
-//            )
-//        ),
+        //        $uniAclConfig["ROLE"] = array(
+        //            "guest" => null,
+        //            "editor" => "staff",
+        //            "admin" => "editor"
+        //        );
+        //        $uniAclConfig["MAP_ROLE_CONTROLLER"] = array(
+        //            "guest" => array(
+        //                "FrontEnd\C" => array(action1, action2, action3),
+        //                "controller" => null,
+        //            )
+        //        ),
         $view->setVariable("admin", $uniAcl->getAllOnRole("admin"));
-//        $view->setVariable("guest", $uniAcl->getWhereOnRole("guest"));
-//        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
+        //        $view->setVariable("guest", $uniAcl->getWhereOnRole("guest"));
+        //        $view->setVariable("editor", $uniAcl->getWhereOnRole("editor"));
         $view->setVariable("uniAclConfig", $uniAclConfig);
         $view->setVariable("userActionOnRole", $userActionOnRole);
         $view->setVariable("inheritRole", $uniAclConfig[UniAcl::MAP_ROLE_PARENT]);
@@ -119,13 +124,18 @@ class RoleController extends AbstractActionController{
             $uniAclConfig = $cache->getArrayItem(UniAcl::CONFIG);
             $uniAcl = new UniAcl($uniAclConfig);
             $uniAcl->init();
-//            $role = $dataObj->role;
-//            $a = $role;
-//            $inherit = $dataObj["inherit"];
-//            $notInherit = $dataObj["notInherit"];
+            //            $role = $dataObj->role;
+            //            $a = $role;
+            //            $inherit = $dataObj["inherit"];
+            //            $notInherit = $dataObj["notInherit"];
+            if($userAction === "deny"){
+                $uniAcl->updateRoleControllerAction($dataObj["role"], $dataObj["inherit"]);
+                $uniAcl->updateRoleSpecial($dataObj["role"], $dataObj["notInherit"]);
+            }
 
-            $uniAcl->updateRoleControllerAction($dataObj["role"], $dataObj["inherit"]);
-            $uniAcl->updateRoleSpecial($dataObj["role"], $dataObj["notInherit"]);
+            if($userAction === "allow"){
+                $uniAcl->updateAllow($dataObj);
+            }
             $newConfig = $uniAcl->buildConfig();
             $cache->setArrayItem(UniAcl::CONFIG, $newConfig);
             /**
@@ -135,10 +145,10 @@ class RoleController extends AbstractActionController{
 
             //            var_dump($data, $userAction);
             $view = new JsonModel();
-//            $view = new ViewModel();
+            //            $view = new ViewModel();
             $view->setVariable("info", $newConfig);
-//            $json = [1 => "2", "3" => "vkl"];
-//            $view->setVariable("a", $json);
+            //            $json = [1 => "2", "3" => "vkl"];
+            //            $view->setVariable("a", $json);
             return $view;
         }
         $variables = array();

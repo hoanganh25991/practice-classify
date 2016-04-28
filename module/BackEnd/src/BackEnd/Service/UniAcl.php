@@ -626,6 +626,21 @@ class UniAcl{
         return false;
     }
 
+    public function updateAllow($newConfig){
+        $role = $newConfig["role"];
+        //        $mapRoleInherit = $newConfig["inherit"];
+        //        $mapRoleNotInherit = $newConfig["notInherit"];
+
+        foreach($newConfig["inherit"] as $controller => $actionArray){
+            //            foreach()
+            $this->roleControllerActionAcl->allow($role, $controller, $actionArray);
+        }
+
+        foreach($newConfig["notInherit"] as $controller => $actionArray){
+            $this->roleSpecialAcl->allow($role, $controller, $actionArray);
+        }
+    }
+
 
     //    public function uniDeny($role, $controller, $privilege, $typeAcl){
     //

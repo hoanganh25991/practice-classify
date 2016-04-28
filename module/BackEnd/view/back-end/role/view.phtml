@@ -188,7 +188,7 @@
                 /** @warn JSON stringify not work on DEEP object */
 //                var x = result.editor[0];
 //                console.log(JSON.stringify(x));
-                ajaxCall(result, mapRoleWhere);
+                ajaxCall(result, "deny", mapRoleWhere);
 //                console.log(mapRoleWhere);
             });
 
@@ -210,9 +210,12 @@
             });
 
             $("#btnSaveAddControllerAction").on("click", function(){
-                var mapInherit = {};
-                getTreeData($("#controllerActionShow").children("ul"), mapInherit);
-                console.log(mapInherit);
+//                var mapInherit = {};
+//                getTreeData($("#controllerActionShow").children("ul"), mapInherit);
+//                console.log(mapInherit);
+                var result = buildObjectToSend("controllerActionShow", "khongco");
+//                console.log(result);
+                ajaxCall(result, "allow", mapRoleWhere);
             });
 
         });
@@ -322,11 +325,14 @@
     function buildObjectToSend(mapInheritId, mapNotInheritId){
         var result = {};
         var mapRoleWhereInherit = {};
-        getTreeData($("#" + mapInheritId).children("ul"), mapRoleWhereInherit);
+        if(mapInheritId){
+            getTreeData($("#" + mapInheritId).children("ul"), mapRoleWhereInherit);
+        }
 //        console.log(mapRoleWhereInherit);
         var mapRoleWhereNotInherit = {};
-        getTreeData($("#" + mapNotInheritId).children("ul"), mapRoleWhereNotInherit);
-
+        if(mapInheritId){
+            getTreeData($("#" + mapNotInheritId).children("ul"), mapRoleWhereNotInherit);
+        }
         var selectDiv = $("#selectContainer").find("select");
         /** explicit try on first child */
         if(selectDiv.length > 0){
@@ -341,11 +347,11 @@
         return result;
     }
 
-    function ajaxCall(result, mapRoleWhere){
+    function ajaxCall(result, action, mapRoleWhere){
         var resultJsonString = JSON.stringify(result);
         console.log(resultJsonString);
         var formData = new FormData();
-        formData.append("userAction", "edit");
+        formData.append("userAction", action);
         formData.append("data", resultJsonString);
         var oReq = new XMLHttpRequest();
         var url = "/admin/role/edit";
