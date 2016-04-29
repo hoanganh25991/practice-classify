@@ -35,7 +35,7 @@ class Module{
         $moduleRouteListener->attach($eventManager);
 
 
-        $eventManager->attach(MvcEvent::EVENT_ROUTE, array(
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, array(
             $this,
             'checkAcl'
         ), 100);
