@@ -69,6 +69,15 @@ class UserTable{
         return false;
     }
 
+    public function insertIdRole($id, $role){
+        $sql = new Sql($this->dbAdapter);
+        $update = $sql->update(self::TABLE);
+                $update->set(array("role" => $role))->where(array("id" => $id));
+//        $update->set(array("role" => "admin"))->where(array("id" => "2"));
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $statement->execute();
+    }
+
 
     public function getAll(){
         $sql = new Sql($this->dbAdapter);

@@ -3,11 +3,12 @@
 <?php //var_dump(json_encode($this->allUsers)); ?>
 <input type="hidden" id="allUsers" value='<?php echo json_encode($this->allUsers); ?>'>
 <input type="hidden" id="allRoles" value='<?php echo json_encode($this->allRoles); ?>'>
-<button class="btn btn-primary">add</button>
+
+<button class="btn btn-primary btnadd" id="btnAddUserRole">add</button>
 
 <div class="row">
-    <div id="userSelectPicker" class="col-md-4"></div>
-    <div id="roleSelectPicker" class="col-md-4"></div>
+    <div id="userSelectPicker" class="col-md-3"></div>
+    <div id="roleSelectPicker" class="col-md-3"></div>
 </div>
 <script>
     (function($){
@@ -24,15 +25,61 @@
                 this.renderUserSelection(this.allUsers, this.id.render.userSelectPicker);
                 this.renderSelection(this.allRoles, this.id.render.roleSelectPicker);
             },
+
+            bindEventHandler: function(){
+                var ad = this;
+                $("#" + ad.id.event.btnAddUserRole).on("click", function(){
+                    /**
+                     * read data from picker
+                     */
+//                    var userSelectPicker = $("#" + ad.id.render.userSelectPicker).find("select");
+//                    var optionUserSelected = userSelectPicker.find("option:checked");
+//                    console.log(optionUserSelected.val());
+                    var userSelected = $("#" + ad.id.render.userSelectPicker)
+                        .find("select")
+                        .find("option:checked")
+                        .val();
+//                    console.log(userSelected);
+                    /**
+                     * read data from user picker
+                     */
+                    var roleSelected = $("#" + ad.id.render.roleSelectPicker)
+                        .find("select")
+                        .find("option:checked")
+                        .val();
+//                    console.log(roleSelected);
+                    /**
+                     * ajax call
+                     */
+                    var result = {
+                        user: userSelected,
+                        role: roleSelected
+                    };
+                    ad.ajaxCall(result, "addUserRole");
+
+                });
+            },
             renderUserSelection: function(data, divId){
-                var users = [];
-                for(var key in this.allUsers){
-                    if(this.allUsers.hasOwnProperty(key)){
-                        var singleUser = this.allUsers[key];
-                        users.push(singleUser["id"] + "|" + singleUser["email"]);
+//                var users = [];
+//                for(var key in this.allUsers){
+//                    if(this.allUsers.hasOwnProperty(key)){
+//                        var singleUser = this.allUsers[key];
+//                        users.push(singleUser["email"]);
+//                    }
+//                }
+                var select = $('<select class="selectpicker">');
+                var optionBlank = $('<option selected disabled hidden style="display: none" value=""></option>');
+                select.append(optionBlank);
+                var optionSample = $("<option>");
+                for(var key in data){
+                    if(data.hasOwnProperty(key)){
+                        var option = optionSample.clone();
+                        option.val(data[key]["id"]);
+                        option.html(data[key]["email"]);
+                        select.append(option);
                     }
                 }
-                this.renderSelection(users, divId);
+                $("#" + divId).append(select);
             },
             renderSelection: function(data, divId){
                 //            <select class="selectpicker">
@@ -53,6 +100,29 @@
                 }
                 $("#" + divId).append(select);
             },
+
+            ajaxCall: function(result, action){
+                var ad = this;
+                var resultJsonString = JSON.stringify(result);
+//                    console.log(result);
+                console.log(resultJsonString);
+                var formData = new FormData();
+                formData.append("userAction", action);
+                formData.append("data", resultJsonString);
+                var oReq = new XMLHttpRequest();
+                var url = "/admin/user/role";
+                oReq.open("post", url);
+                oReq.send(formData);
+                oReq.onload = function(){
+                    var res = oReq.response;
+                    console.log(res);
+//                    var resJsonObj = JSON.parse(res);
+//                    console.log(resJsonObj);
+//                    ad.uniAclConfig = resJsonObj["info"];
+//                        ad.render();
+                    window.alert(res);
+                };
+            }
 //            renderRoleSelection: function(data, divId){
 //
 //            }
@@ -66,10 +136,14 @@
             render: {
                 userSelectPicker: "userSelectPicker",
                 roleSelectPicker: "roleSelectPicker",
+            },
+            event: {
+                btnAddUserRole: "btnAddUserRole"
             }
         };
         var userRoleView = new UserRoleView(idCollection);
         userRoleView.render();
+        userRoleView.bindEventHandler();
 
     })(jQuery);
 </script>

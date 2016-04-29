@@ -14,7 +14,8 @@ class LoginForm extends Form{
             'attributes' => array(
                 'id' => 'email',
                 'class' => 'form-control',
-                'placeholder' => 'example@example.com'
+                'placeholder' => 'example@example.com',
+                'autocomplete' => 'off'
             ),
             'options' => array(
                 'label' => 'Email',
@@ -27,7 +28,8 @@ class LoginForm extends Form{
             'attributes' => array(
                 'id' => 'password',
                 'class' => 'form-control',
-                'placeholder' => '**********'
+                'placeholder' => '**********',
+                'autocomplete' => 'off'
             ),
             'options' => array(
                 'label' => 'Password',
