@@ -83,7 +83,7 @@ class RoleController extends AbstractActionController{
             /*
              * parse json from client's ajax request
              */
-            $userAction = json_decode($postParam->get("userAction"));
+            $userAction = $postParam->get("userAction");
             $dataArray = json_decode($postParam->get("data"), true);
 
             /**

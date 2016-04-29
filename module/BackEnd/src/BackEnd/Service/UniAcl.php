@@ -160,7 +160,7 @@ class UniAcl{
         //each user with his id as role, allow userSpecialAcl open permission
         //from his id to "where"
         if(isset($this->config[self::MAP_USER_SPECIAL])){
-            foreach($this->config[self::MAP_USER_SPECIAL] as $role){
+            foreach($this->config[self::MAP_USER_SPECIAL] as $role => $controllerAction){
                 $this->userSpecialAcl->addRole($role);
             }
         }
@@ -276,13 +276,19 @@ class UniAcl{
             }
         }
         if($action === "allow"){
-            $mapRoleControllerAction = array();
-            $mapRoleSpecial = array();
-            $mapRoleControllerAction[$role][] = $newConfig[self::INHERIT];
-            $mapRoleSpecial[$role][] = $newConfig[self::NOT_INHERIT];
-
-            $this->allow($mapRoleControllerAction, $this->roleControllerActionAcl);
-            $this->allow($mapRoleSpecial, $this->roleSpecialAcl);
+            /**
+             * update for role controller action
+             */
+            $role = $newConfig[self::ROLE];
+            foreach($newConfig[self::INHERIT] as $controller => $actionArray){
+                $this->roleControllerActionAcl->allow($role, $controller, $actionArray);
+            }
+            /**
+             * update for role special
+             */
+            foreach($newConfig[self::NOT_INHERIT] as $controller => $actionArray){
+                $this->roleSpecialAcl->allow($role, $controller, $actionArray);
+            }
         }
     }
 
