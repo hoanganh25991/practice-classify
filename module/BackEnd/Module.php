@@ -42,8 +42,11 @@ class Module{
     }
 
     public function checkAcl(MvcEvent $mvcEvent){
-        //if user try to log in, log out, join
-        //do not apply check acl
+        /**
+         * if user try to log in, log out, join
+         * means any action from 'BackEnd\Controller\Auth'
+         * NOT applied check acl
+         */
         $routeMatchInfo = $mvcEvent->getRouteMatch()->getParams();
         if($routeMatchInfo["controller"] === 'BackEnd\Controller\Auth'){
             return;
@@ -51,7 +54,7 @@ class Module{
 
         $serviceManager = $mvcEvent->getApplication()->getServiceManager();
         /**
-         * GET ACL CONFIG
+         * get uni acl config
          */
         /** @var UniCache $cache */
         $cache = $serviceManager->get("UniCache");
@@ -61,6 +64,9 @@ class Module{
         if(!(count($uniAclConfig) > 0)){
             $uniAclConfig = array();
 
+            /**
+             * read controller-action from application-config
+             */
             /** @var Application $app */
             $config = $serviceManager->get("config");
 
@@ -71,36 +77,46 @@ class Module{
                 $controllerAction[$defaults["controller"]][] = $defaults["action"];
             }
 
-
             $uniAclConfig[UniAcl::CONTROLLER_ACTION] = $controllerAction;
-            $tempConfig = $config[UniAcl::CONFIG];
-            $tempConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
-            $uniAclConfig = $tempConfig;
-            $cache->setArrayItem(UniAcl::CONFIG, $tempConfig);
+            /**
+             * default config set up in module.config.php
+             * follow rules of UniAcl
+             */
+            $defaultConfig = $config[UniAcl::CONFIG];
+            /**
+             * add controller-action for default
+             * no one knows "where", only application-config has it
+             */
+            $defaultConfig[UniAcl::CONTROLLER_ACTION] = $uniAclConfig[UniAcl::CONTROLLER_ACTION];
+            /**
+             * save to cache
+             */
+            $uniAclConfig = $defaultConfig;
+            $cache->setArrayItem(UniAcl::CONFIG, $defaultConfig);
             /** @var AclTable $aclTable */
+            /**
+             * save to db
+             */
             $aclTable = $serviceManager->get('AclTable');
-            $aclTable->insert($tempConfig);
-//            var_dump($aclTable->getLastRow());
+            $aclTable->insert($defaultConfig);
         }
         /**
-         * INIT ACL BY CONFIG
+         * init uni acl by config
          */
         $uniAcl = new UniAcl($uniAclConfig);
         $uniAcl->init();
-        //        $uniAcl->uniDeny("guest", 'FrontEnd\Controller\SpecialGift', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-        //        $uniAcl->uniDeny("admin", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-        //        $uniAcl->uniDeny("editor", 'FrontEnd\Controller\Keep', "index", UniAcl::ROLE_CONTROLLER_ACTION);
-        //        $uniAcl->buildConfig();
         /**
-         * GET USER FROM SESSION
+         * get user from session
          */
         $uniSession = new UniSession();
-        $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
-//        $user["role"] = "admin";
-//        var_dump($user);
-        /*
-         *
+        /**
+         * if user not follow UniAcl default
+         * (has $user["role"], $user["id"]
+         * role default is "guest"
+         * id default is ""
          */
+        $user = $uniSession->get(UniSession::USER, UniSession::USER_LOGGED);
+
         $isAllowed = $uniAcl->isUniAllowed($user, $routeMatchInfo["controller"], $routeMatchInfo["action"]);
         if(!$isAllowed){
             die("permission deny");

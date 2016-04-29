@@ -19,4 +19,4 @@ interfaces.
 ### log
 
     at 34th commit, basic work:
-[youtube](https://youtu.be/AlBCfXm1DzU)
+[review on YouTube](https://youtu.be/AlBCfXm1DzU)

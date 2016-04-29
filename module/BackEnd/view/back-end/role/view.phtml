@@ -17,78 +17,7 @@
     <span class="glyphicon glyphicon-plus btnadd"></span>
     <span class="glyphicon glyphicon-trash btndelete"></span>
 </div>
-<!--<div class="row">-->
-<!--    <div class="col-md-8">-->
-<!--        <div class="panel-group" id="panelParent">-->
-<!--            <div class="panel panel-default">-->
-<!--                <div class="panel-heading">-->
-<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#rolePanelBody">-->
-<!--                        role-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div id="rolePanelBody" class="panel-collapse collapse">-->
-<!--                    <div class="panel-body">-->
-<!--                        <p>hien thi thong tin ve map role parent</p>-->
-<!--                        <div id="inheritRoleShow"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="panel panel-default">-->
-<!--                <div class="panel-heading">-->
-<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#mapPanelBody">map-->
-<!--                        role controller action-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div id="mapPanelBody" class="panel-collapse collapse">-->
-<!--                    <div class="panel-body">-->
-<!--                        <div id="mapRoleWhereShow">-->
-<!--                            <div id="selectContainer"></div>-->
-<!--                            <div>-->
-<!--                                <span class="h3">inherit</span>-->
-<!--                                <button class="btn btn-default" id="btnAddControllerAction">add</button>-->
-<!--                            </div>-->
-<!--                            <div id="mapRoleWhereInherit"></div>-->
-<!--                            <div>-->
-<!--                                <span class="h3">not inherit</span>-->
-<!--                                <button class="btn btn-default" id="btnAddSpecial">add</button>-->
-<!--                            </div>-->
-<!--                            <div id="mapRoleWhereNotInherit"></div>-->
-<!--                            <button id="btnMapRoleWhere" class="btn btn-success">save</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="panel panel-default">-->
-<!--                <div class="panel-heading">-->
-<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse" href="#allRolePanelBody">-->
-<!--                        all roles-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div id="allRolePanelBody" class="panel-collapse collapse">-->
-<!--                    <div class="panel-body">-->
-<!--                        <p>hien thi tat cac role</p>-->
-<!--                        <div id="allRolesShow"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="panel panel-default">-->
-<!--                <div class="panel-heading">-->
-<!--                    <div class="panel-title" data-parent="#panelParent" data-toggle="collapse"-->
-<!--                         href="#controllerActionPanelBody">controller-->
-<!--                        action-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div id="controllerActionPanelBody" class="panel-collapse collapse">-->
-<!--                    <div class="panel-body">-->
-<!--                        <p>hien thi tat cac controller action</p>-->
-<!--                        <div id="allControllerActionShow"></div>-->
-<!--                        <div id="save"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+
 <div class="modal fade" tabindex="-1" role="dialog" id="modalControllerAction">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -351,6 +280,7 @@
                 },
 
                 buildObjectToSend: function(divIdRoleSelectPicker, divIdMapRoleCA, divIdMapRoleSpecial){
+                    var ad = this;
                     var result = {};
                     var mapRoleControllerAction = {};
                     if(divIdMapRoleCA){
@@ -365,9 +295,9 @@
                     if(selectDiv.length > 0){
                         selectDiv = $(selectDiv[0]);
                     }
-                    result["role"] = selectDiv.find("option:selected").val();
-                    result["inherit"] = mapRoleControllerAction;
-                    result["notInherit"] = mapRoleSpecial;
+                    result[ad.ROLE] = selectDiv.find("option:selected").val();
+                    result[ad.INHERIT] = mapRoleControllerAction;
+                    result[ad.NOT_INHERIT] = mapRoleSpecial;
                     return result;
                 },
 
