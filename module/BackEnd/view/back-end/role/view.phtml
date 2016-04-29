@@ -8,15 +8,32 @@
 <li id="sampleRoleParentRow" style="display: none;">
     <input type="text" readonly name="role">
     <input type="text" readonly name="parentRole">
-    <button class="btn btn-primary" data-container="body" data-toggle="tooltip"
-            data-placement="right"><span class="glyphicon glyphicon-cog"></span>
-    </button>
+    <span class="glyphicon glyphicon-pencil btn btn-default btnedit btnEditRoleParent"></span>
+    <span class="glyphicon glyphicon-plus btn btn-default btnadd btnAddRoleParent"></span>
+    <span class="glyphicon glyphicon-trash btn btn-default btndelete btnDeleteRole"></span>
 </li>
-<div id="actionDivSample">
-    <span class="glyphicon glyphicon-pencil btnedit"></span>
-    <span class="glyphicon glyphicon-plus btnadd"></span>
-    <span class="glyphicon glyphicon-trash btndelete"></span>
-</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="modalRoleParent">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">role parent</h4>
+            </div>
+            <div class="modal-body">
+                <div id="modalBodyRoleParent">
+                    <input type="text" name="role">
+                    <input type="text" name="parentRole">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="btnSaveModalRoleParent">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div class="modal fade" tabindex="-1" role="dialog" id="modalControllerAction">
     <div class="modal-dialog">
@@ -155,10 +172,24 @@
                         console.log(where);
                     });
 
+
                     $("#" + ad.id.event.btnRebuildControllerAction).on("click", function(){
                         var result = {};
                         ad.ajaxCall(result, "rebuildControllerAction");
                     });
+
+                    $("." + ad.id.event.btnEditRoleParent).on("click", function(){
+                        console.log("edit role parent");
+                    });
+
+                    $("." + ad.id.event.btnAddRoleParent).on("click", function(){
+                        console.log("add role parent");
+                    });
+
+                    $("." + ad.id.event.btnDeleteRole).on("click", function(){
+                        console.log("delete role parent");
+                    });
+
                 },
 
                 renderMapRoleParent: function(data, sampleRoleParentRowId, divIdActionDivSample, divId){
@@ -177,14 +208,6 @@
                             containerDiv.append(row);
                         }
                     }
-                    //bind tooltip for each span "gly cog"
-                    var actionDivSample = $("#" + divIdActionDivSample);
-//                    var actionDiv = actionDivSample.clone();
-//                    actionDiv.css({display: 'inline'});
-                    $("." + ad.id.render.userAction).tooltip({
-                        html: true,
-                        title: actionDivSample
-                    });
                 },
 
                 renderTreeView: function(data, checkedOption, divId){
@@ -340,14 +363,19 @@
                     modalBodyControllerAction: "modalBodyControllerAction",
                     userAction: "userAction",
                     sampleRoleParentRow: "sampleRoleParentRow",
-                    actionDivSample: "actionDivSample"
+                    actionDivSample: "actionDivSample",
+                    modalBodyRoleParent: "modalBodyRoleParent"
                 },
                 event: {
                     btnSaveMapRoleWhere: "btnSaveMapRoleWhere",
                     btnAddControllerAction: "btnAddControllerAction",
                     btnAddSpecial: "btnAddSpecial",
                     btnSaveModalControllerAction: "btnSaveModalControllerAction",
-                    btnRebuildControllerAction: "btnRebuildControllerAction"
+                    btnRebuildControllerAction: "btnRebuildControllerAction",
+                    btnEditRoleParent: "btnEditRoleParent",
+                    btnAddRoleParent: "btnAddRoleParent",
+                    btnDeleteRole: "btnDeleteRole",
+                    btnSaveModalRoleParent: "btnSaveModalRoleParent",
                 }
             };
             var adminRoleView = new AdminRoleView(idCollection);

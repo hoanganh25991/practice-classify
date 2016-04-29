@@ -247,7 +247,6 @@ class UniAcl{
     }
 
     /**
-     * @param $role
      * @param $newConfig
      * @param $action
      */
