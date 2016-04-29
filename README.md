@@ -15,3 +15,7 @@ interfaces.
 
     in /data/{module}{database}.sql folder, run SQL command to create table in your database 
     in /config/autoload/local.php, provide {username}, {password} to access mysql
+    
+### log
+
+    at 34th commit, basic work: https://youtu.be/AlBCfXm1DzU
